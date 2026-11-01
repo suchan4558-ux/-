@@ -26,11 +26,13 @@ for l in reversed(lines):
             sent = True
     if e.get('type') == 'user':
         is_tool_result = isinstance(c, list) and any(x.get('type') == 'tool_result' for x in c)
-        if not is_tool_result:
-            break        # 사용자의 마지막 메시지에 닿음
+        text = c if isinstance(c, str) else ' '.join(x.get('text', '') for x in c if isinstance(x, dict))
+        harness = text.lstrip().startswith(('[Your previous response', 'Stop hook feedback', '<system-reminder>', '[SYSTEM NOTIFICATION'))
+        if not is_tool_result and not harness:
+            break        # 사용자의 마지막 메시지에 닿음(시스템이 넣은 메시지는 건너뜀)
 if not sent:
     print(json.dumps({
         "decision": "block",
-        "reason": "사용자 요청: 답마다 휴대폰 알림. PushNotification(status: proactive)으로 이번 답의 첫 줄 요지를 보낸 뒤, 다른 말 없이 끝낼 것."
+        "reason": "사용자 요청: 답마다 휴대폰 알림. PushNotification(status: proactive)으로 이번 답의 첫 줄 요지를 보낸 뒤, 답을 되풀이하지 말고 한 줄로만 끝낼 것."
     }, ensure_ascii=False))
 sys.exit(0)
