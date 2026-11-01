@@ -80,6 +80,9 @@ def check_row(g, table, c, names, wrong):
         if not v: E.append(f'{nm} 칸이 비었음')
     if gn and not GEUNGEO.fullmatch(gn):
         E.append(f'근거 꼴이 "권-장(행)"이 아님: {gn}')
+    for a, b in re.findall(r'(\d+)-(\d+)(?=[,)])', gn):
+        if int(b) - int(a) + 1 > 30:
+            W.append(f'근거 범위 {a}-{b}가 30줄을 넘음. 그 내용이 있는 행만 가리키도록 좁힐 수 있는지 볼 것')
     key = '1' + (table or '') if g == '1' else g
     if key not in ITEMS:
         E.append('인물 파일인데 사실 표인지 바탕 표인지 모름'); return E, W
