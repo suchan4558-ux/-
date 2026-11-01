@@ -4,6 +4,8 @@
 #   python3 check.py diff [파일...]                 : HEAD에 없던 새 줄만 검사(훅이 부름)
 #   python3 check.py diff --commit                 : 위에 더해, 새 줄의 장마다 검수 기록이 있는지 봄
 #   python3 check.py all [파일...]                  : 파일 전체 검사(이미 쓴 줄 정리용)
+#   python3 check.py fingerprint 권-장              : 그 장 줄들의 지문(검수 기록에 적음)
+#   python3 check.py geomsu 권-장                   : 검수 기록이 통과로 인정되는지 확인
 # 오류: 기준을 어긴 것. 경고: 어겼을 수 있으니 기준과 대조해 볼 것.
 import re, sys, os, glob, subprocess, collections
 
@@ -144,6 +146,39 @@ def head_text(path):
     r = subprocess.run(['git', 'show', 'HEAD:' + rel], cwd=ROOT, capture_output=True, text=True)
     return r.stdout if r.returncode == 0 else ''
 
+import hashlib
+GIJUN = os.path.join(ROOT, '원작 정리본 기준.md')
+
+def chapter_rows(gj):
+    """근거의 첫 장이 gj인 줄 전부(모든 갈래)"""
+    out = []
+    for path in galle_files([]):
+        for ln, l, gw, t, c in parse(path):
+            if len(c) == 5 and '-'.join(gwon_jang(c[-1])) == gj:
+                out.append(os.path.basename(path) + '\t' + l.strip())
+    return sorted(out)
+
+def fingerprint(gj):
+    return hashlib.sha256('\n'.join(chapter_rows(gj)).encode()).hexdigest()[:16]
+
+def geomsu_status(gj):
+    """검수 기록 확인 → (통과인지, 문제들)"""
+    p = os.path.join(GEOMSU, gj + '.md')
+    if not os.path.exists(p): return False, [f'검수 기록 도구/검수/{gj}.md가 없음']
+    txt = open(p, encoding='utf-8').read(); P = []
+    m = re.search(r'^지문: ([0-9a-f]+)', txt, re.M)
+    if not m: P.append('기록에 "지문:" 줄이 없음')
+    elif m.group(1) != fingerprint(gj): P.append('검수한 뒤에 그 장의 줄이 바뀌었음(지문 불일치). 다시 검수 받음')
+    gj_txt = re.sub(r'\s+', ' ', open(GIJUN, encoding='utf-8').read())
+    for q in re.findall(r'기준: "([^"]+)"', txt):
+        if re.sub(r'\s+', ' ', q).strip() not in gj_txt: P.append(f'기준 인용이 기준 파일에 없음: "{q[:60]}"')
+    for sec in ('어긋난 줄', '빠진 것', '기준 질문'):
+        b = re.search(rf'^## {sec}\n(.*?)(?=^## |^결과:|\Z)', txt, re.M | re.S)
+        if b is None: P.append(f'"## {sec}" 절이 없음')
+        elif re.search(r'^- ', b.group(1), re.M) and '결과: 통과' in txt: P.append(f'"{sec}"에 남은 것이 있는데 통과로 적음')
+    if not re.search(r'^결과: 통과\s*$', txt, re.M): P.append('"결과: 통과"가 아님')
+    return not P, P
+
 def unpassed_chapters():
     """HEAD에 없던 새 줄이 있는데 검수 기록에 "결과: 통과"가 없는 장들"""
     out = set()
@@ -153,13 +188,16 @@ def unpassed_chapters():
             if l in old or len(c) != 5: continue
             g2, j = gwon_jang(c[-1])
             if g2: out.add(f'{g2}-{j}')
-    def passed(gj):
-        p = os.path.join(GEOMSU, gj + '.md')
-        return os.path.exists(p) and '결과: 통과' in open(p, encoding='utf-8').read()
-    return {gj for gj in out if not passed(gj)}
+    return {gj for gj in out if not geomsu_status(gj)[0]}
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'diff'
+    if mode == 'fingerprint':
+        gj = sys.argv[2]; print(f'지문: {fingerprint(gj)}  (줄 {len(chapter_rows(gj))}개)'); return
+    if mode == 'geomsu':
+        ok, P = geomsu_status(sys.argv[2])
+        for x in P: print('[문제]', x)
+        print('통과' if ok else '통과 아님'); sys.exit(0 if ok else 1)
     names, wrong = load_pyogi()
     nerr = 0
     if mode == 'rows':
@@ -195,10 +233,9 @@ def main():
                     if gw2: need.add(f'{gw2}-{jang}')
         if '--commit' in sys.argv:
             for gj in sorted(need):
-                p = os.path.join(GEOMSU, gj + '.md')
-                if not (os.path.exists(p) and '결과: 통과' in open(p, encoding='utf-8').read()):
-                    print(f'[오류] {gj}장 줄을 새로 넣었는데 검수 기록(도구/검수/{gj}.md, "결과: 통과")이 없음. 도구/검수_지시.md대로 검수를 먼저 받음')
-                    nerr += 1
+                ok, P = geomsu_status(gj)
+                for x in P:
+                    print(f'[오류] {gj}장 검수: {x}. 도구/검수_지시.md대로 검수를 받음'); nerr += 1
     print(f'오류 {nerr}개')
     sys.exit(1 if nerr else 0)
 
