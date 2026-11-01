@@ -1,15 +1,3 @@
 {
-  "promptSuggestionEnabled": false,
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/notify.sh\""
-          }
-        ]
-      }
-    ]
-  }
+  "promptSuggestionEnabled": false
 }
