@@ -39,10 +39,6 @@
           {
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/notify_check.py\""
-          },
-          {
-            "type": "command",
-            "command": "command -v powershell >/dev/null 2>&1 && powershell -NoProfile -Command \"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Claude finished','Claude Code')\" || true"
           }
         ]
       }
