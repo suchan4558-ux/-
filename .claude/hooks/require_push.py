@@ -31,5 +31,5 @@ for e in entries[start + 1:]:
             sys.exit(0)
 
 print(json.dumps({"decision": "block",
-                  "reason": "이번 답에서 PushNotification으로 \"답변 완료\"를 아직 보내지 않았습니다. 보내고 끝내세요."},
+                  "reason": "이번 답에서 PushNotification으로 \"답변 완료\"를 아직 보내지 않았습니다. 알림을 보낸 뒤, 이미 쓴 답을 되풀이하지 말고 \"알림 보냄\" 한 줄만 쓰고 끝내세요."},
                  ensure_ascii=False))
