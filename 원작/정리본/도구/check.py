@@ -164,22 +164,40 @@ def chapter_rows(gj):
 def fingerprint(gj):
     return hashlib.sha256('\n'.join(chapter_rows(gj)).encode()).hexdigest()[:16]
 
+GOCHIM = os.path.join(TOOL, '고침')
+
 def geomsu_status(gj):
-    """검수 기록 확인 → (통과인지, 문제들)"""
+    """검수 기록 확인 → (통과인지, 문제들)
+    통과: 검수 기록이 "결과: 통과"이고 지문이 맞음.
+    또는 검수가 한 번 끝난 뒤 고침 기록(도구/고침/권-장.md)이 있고, 지적 수와 고침 줄 수가 같으며, 고침 기록의 지문이 지금 줄과 맞음."""
     p = os.path.join(GEOMSU, gj + '.md')
     if not os.path.exists(p): return False, [f'검수 기록 도구/검수/{gj}.md가 없음']
     txt = open(p, encoding='utf-8').read(); P = []
     m = re.search(r'^지문: ([0-9a-f]+)', txt, re.M)
     if not m: P.append('기록에 "지문:" 줄이 없음')
-    elif m.group(1) != fingerprint(gj): P.append('검수한 뒤에 그 장의 줄이 바뀌었음(지문 불일치). 다시 검수 받음')
     gj_txt = re.sub(r'\s+', ' ', open(GIJUN, encoding='utf-8').read())
     for q in re.findall(r'기준: "([^"]+)"', txt):
         if re.sub(r'\s+', ' ', q).strip() not in gj_txt: P.append(f'기준 인용이 기준 파일에 없음: "{q[:60]}"')
+    n_items = 0
     for sec in ('어긋난 줄', '빠진 것', '기준 질문'):
         b = re.search(rf'^## {sec}\n(.*?)(?=^## |^결과:|\Z)', txt, re.M | re.S)
-        if b is None: P.append(f'"## {sec}" 절이 없음')
-        elif re.search(r'^- ', b.group(1), re.M) and '결과: 통과' in txt: P.append(f'"{sec}"에 남은 것이 있는데 통과로 적음')
-    if not re.search(r'^결과: 통과\s*$', txt, re.M): P.append('"결과: 통과"가 아님')
+        if b is None: P.append(f'"## {sec}" 절이 없음'); continue
+        k = len(re.findall(r'^- ', b.group(1), re.M)); n_items += k
+        if k and '결과: 통과' in txt: P.append(f'"{sec}"에 남은 것이 있는데 통과로 적음')
+    if P: return False, P
+    fp = fingerprint(gj)
+    if re.search(r'^결과: 통과\s*$', txt, re.M):
+        if m.group(1) != fp: return False, ['검수한 뒤에 그 장의 줄이 바뀌었음(지문 불일치). 고친 것을 고침 기록에 적음']
+        return True, []
+    # 검수에서 고칠 것이 나온 경우: 고침 기록으로 끝냄(다시 검수하지 않음)
+    g = os.path.join(GOCHIM, gj + '.md')
+    if not os.path.exists(g): return False, [f'검수에서 고칠 것 {n_items}개가 나왔는데 고침 기록 도구/고침/{gj}.md가 없음']
+    gt = open(g, encoding='utf-8').read()
+    gm = re.search(r'^지문: ([0-9a-f]+)', gt, re.M)
+    n_fix = len(re.findall(r'^- ', gt, re.M))
+    if not gm: P.append('고침 기록에 "지문:" 줄이 없음')
+    elif gm.group(1) != fp: P.append('고침 기록을 적은 뒤에 그 장의 줄이 바뀌었음(지문 불일치). 고침 기록을 다시 적음')
+    if n_fix != n_items: P.append(f'검수 지적은 {n_items}개인데 고침 기록은 {n_fix}줄임. 지적마다 한 줄씩 적음')
     return not P, P
 
 def unpassed_chapters():
