@@ -144,6 +144,20 @@ def head_text(path):
     r = subprocess.run(['git', 'show', 'HEAD:' + rel], cwd=ROOT, capture_output=True, text=True)
     return r.stdout if r.returncode == 0 else ''
 
+def unpassed_chapters():
+    """HEAD에 없던 새 줄이 있는데 검수 기록에 "결과: 통과"가 없는 장들"""
+    out = set()
+    for path in galle_files([]):
+        old = set(head_text(path).split('\n'))
+        for ln, l, gw, t, c in parse(path):
+            if l in old or len(c) != 5: continue
+            g2, j = gwon_jang(c[-1])
+            if g2: out.add(f'{g2}-{j}')
+    def passed(gj):
+        p = os.path.join(GEOMSU, gj + '.md')
+        return os.path.exists(p) and '결과: 통과' in open(p, encoding='utf-8').read()
+    return {gj for gj in out if not passed(gj)}
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'diff'
     names, wrong = load_pyogi()

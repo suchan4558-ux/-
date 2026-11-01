@@ -24,6 +24,13 @@ print('===== 검사 =====')
 table = sec[4:].strip() if sec in ('### 사실', '### 바탕') else None
 if g == '1' and table is None:
     print('[오류] 인물 파일은 "### 사실" 또는 "### 바탕"을 꼭 적음'); sys.exit(1)
+# 검수를 통과하지 않은 앞 장이 있으면 다른 장의 줄은 받지 않음(한 장씩 끝내고 넘어감)
+sys.path.insert(0, TOOL); import check
+chs = {f"{m.group(1)}-{m.group(2)}" for m in (re.match(r'\| .* \| (\d+)-(\d+)\(', l) for l in rows) if m}
+left = check.unpassed_chapters() - chs
+if left:
+    print(f'[오류] 검수를 통과하지 않은 장이 있음: {", ".join(sorted(left))}. 그 장의 검수(도구/검수_지시.md)를 통과한 뒤 다음 장으로 넘어감')
+    print('넣지 않았음.'); sys.exit(1)
 r = subprocess.run([sys.executable, os.path.join(TOOL, 'check.py'), 'rows', path] + ([table] if table else []),
                    input='\n'.join(rows), capture_output=True, text=True)
 print(r.stdout, end='')
