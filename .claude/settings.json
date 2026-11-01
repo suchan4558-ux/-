@@ -33,6 +33,16 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -s -m 10 -H 'Title: Claude' -d '답변 완료' https://ntfy.sh/claude-noti-27e075ea79d3 >/dev/null 2>&1 || true"
+          }
+        ]
+      }
     ]
   }
 }
