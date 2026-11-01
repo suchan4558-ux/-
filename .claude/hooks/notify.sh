@@ -9,7 +9,7 @@ now=$(date +%s)
 last=$(cat "/tmp/ntfy_time_$id" 2>/dev/null || echo 0)
 [ $((now - last)) -lt 10 ] && exit 0
 echo "$now" > "/tmp/ntfy_time_$id"
-curl -s -m 10 -H 'Title: Claude' \
+curl -s -m 10 -H 'Title: claude2' \
   -H "Click: https://claude.ai/code/session_${id#cse_}" \
   -d '답변 완료' https://ntfy.sh/claude-noti-27e075ea79d3 >/dev/null 2>&1
 exit 0
