@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "curl -s -m 10 -H 'Title: Claude' -H \"Click: https://claude.ai/code/session_${CLAUDE_CODE_REMOTE_SESSION_ID#cse_}\" -d '답변 완료' https://ntfy.sh/claude-noti-27e075ea79d3 >/dev/null 2>&1 || true"
+            "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/notify.sh\""
           }
         ]
       }
