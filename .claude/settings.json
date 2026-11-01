@@ -1,39 +1,6 @@
 {
   "promptSuggestionEnabled": false,
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/원작/정리본/도구/hook.py\""
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/원작/정리본/도구/hook.py\""
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "startup|resume|clear|compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cat \"$CLAUDE_PROJECT_DIR/원작/정리본/도구/작업순서.md\""
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
