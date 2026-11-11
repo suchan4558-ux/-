@@ -58,7 +58,7 @@
 |---|---|---|
 | 공통 | 잠깐 구독 → workshop 폴더에서 꺼냄 → 수정 다시 적용 → mods에 넣고 구독 해제 | 1 |
 | Terminator | 새 DLL에 4-4 수정 다시 적용 (주소가 바뀌었는지 먼저 확인), config는 4-3 값으로 | 4 |
-| Toolbox | DLL은 원본 그대로, config만 4-5 값으로 | 4 |
+| Toolbox | 새 DLL에 4-6 수정 다시 적용 (주소가 바뀌었는지 먼저 확인), config는 4-5 값으로 | 4 |
 | Riot Items | 새 소스에 우리 수정 합쳐 빌드 (수정본 완성 후) | 5 |
 | 게임 | 2-1 게임 규칙(실행 파일 주소)과 `stat.*` 패치 기록 형식이 그대로인지 확인 | 2, 4 |
 | banpick_view_plus | 사용자가 직접 덮어쓰기 | 1 |
@@ -87,7 +87,7 @@ mods 폴더:
 |---|---|---|
 | `riot_items_tfm2` | Riot Items | 원본 1.0.10. 수정본 아직 없음 (5장) |
 | `terminator_draft` | Terminator Draft AI | DLL·config 수정본 (4장) |
-| `drafters_toolkit` | Drafter's Toolbox | DLL 원본 + config 수정 (4장) |
+| `drafters_toolkit` | Drafter's Toolbox | DLL 수정본 + config 수정 (4장) |
 | `banpick_view_plus` | 밴픽 화면 UI | 업데이트는 사용자가 직접 |
 | `champion_stats_tab` | 선수 화면에 Champion Statistics(챔피언별 판수·승률·평점·KDA)·Head-to-Head(상대 팀별 전적·경기 박스스코어) 탭 추가 | 수정 안 함 |
 | `update_stress_player_growth` | 선수 노화(능력치 감소) 방지 | 수정 안 함 |
@@ -375,7 +375,7 @@ mods 폴더:
 
 | 항목 | 결정 | 이유 |
 |---|---|---|
-| Toolbox 공식 | 원본: (승 + 50)/(판 + 100), 변경 후 경기만 | 보여주는 도구라 근거 없는 버프/너프 보정을 표시 승률에 섞지 않음. Terminator는 고르는 도구라 패치 점수를 따로 둘 수 있음 |
+| Toolbox 공식 | 수정본 (4-6 티어 신뢰도): (승 + 50)/(판 + 100), 변경 후 경기만 | 보여주는 도구라 근거 없는 버프/너프 보정을 표시 승률에 섞지 않음. Terminator는 고르는 도구라 패치 점수를 따로 둘 수 있음 |
 | 10판 컷 | `tier_min_matches=10` | 4-2 10판 컷과 같음 |
 
 | config | 값 |
@@ -387,9 +387,9 @@ mods 폴더:
 
 - Terminator와 차이: 변경 후 10판 미만이면 Toolbox는 그 판까지 넣어 계산(No-Tier 표시), Terminator는 빼고 기준값만 씀
 
-## 4-6. Toolbox DLL 수정 위치 (VA, 되돌림 — 현재는 원본 DLL)
+## 4-6. Toolbox DLL 수정 위치 (VA, 지금 쓰는 DLL에 전부 들어 있음)
 
-- 4-5 결정(원본 공식)으로 되돌려 지금은 안 씀. 다시 고칠 때 참고용
+- 아래 다섯 가지가 모두 지금 쓰는 DLL에 들어 있음. 제작자 원본 DLL은 갖고 있지 않음
 
 | 항목 | 위치 | 내용 |
 |---|---|---|
