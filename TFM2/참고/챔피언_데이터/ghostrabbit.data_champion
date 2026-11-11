@@ -1,0 +1,449 @@
+{
+  "id": "ghostrabbit",
+  "name": "Ghost Rabbit",
+  "category": "Magician",
+  "tags": ["AP", "Range"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/ghostrabbit",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/ghostrabbit_skill",
+    "asset/leefs_variety_all/icons/ghostrabbit_skill2",
+    "asset/leefs_variety_all/icons/ghostrabbit_ult"
+  ],
+  "stat": {
+    "attack": 85,
+    "magic_power": 40,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 20,
+    "hp": 100,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5000,
+      "name": "voidling_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "ghostrabbit_projectile",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_projectile",
+      "tag": "ghostrabbit_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "ghostrabbit_skill_ball",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_skill_ball",
+      "tag": "ghostrabbit_skill_ball",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "ghostrabbit_skill2_ball",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_skill2_ball",
+      "tag": "ghostrabbit_skill2_ball",
+      "z": 0,
+      "repeat": true
+    }
+	],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "ghostrabbit_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_skill_hit",
+      "tag": "ghostrabbit_skill_hit",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "ghostrabbit_skill2_effect",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_skill2_effect",
+      "tag": "ghostrabbit_skill2_effect",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "ghostrabbit_skill2_hit",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_skill2_hit",
+      "tag": "ghostrabbit_skill2_hit",
+      "z": 0,
+      "is_follow": true
+    },
+	    {
+      "type": "Animation",
+      "name": "ghostrabbit_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_ult_hit",
+      "tag": "ghostrabbit_ult_hit",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "ghostrabbit_ult_debuff",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_ult_debuff",
+      "tag": "ghostrabbit_ult_debuff",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "ghostrabbit_ult_heal",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_ult_heal",
+      "tag": "ghostrabbit_ult_heal",
+      "z": 0,
+      "is_follow": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "ghostrabbit_ult_debuff",
+      "anim": "asset/leefs_variety_all/effects/ghostrabbit_ult_debuff",
+      "tag": "ghostrabbit_ult_debuff",
+      "z": 1,
+      "repeat": true
+    }
+  ],
+"skill": {
+  "action_name": "skill",
+  "description": "#asset/base/text/champion?description.ghostrabbit.skill",
+  "duration": 30,
+  "cooltime": 240,
+  "start_timing": 12,
+  "range": 95000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Sfx",
+        "name": "ghostrabbit_skill_cast"
+      },
+      {
+        "type": "TargetProjectile",
+        "name": "ghostrabbit_skill_ball",
+        "speed": 1100,
+        "applied_target": "EnemyWithoutTower",
+        "applied_effects": [
+          {
+            "effect": {
+              "type": "Combine",
+              "effects": [
+                {
+                  "type": "ApAttack",
+                  "damage": 55,
+                  "attack_ratio": 80
+                },
+                {
+                  "type": "Sfx",
+                  "name": "ghostrabbit_skill_hit"
+                },
+                {
+                  "type": "ViewEffect",
+                  "name": "ghostrabbit_skill_hit",
+                  "duration": 30
+                }
+              ]
+            },
+            "casting_type": "Targeting"
+          }
+        ]
+      }
+    ]
+  }
+},
+"skill2": {
+  "action_name": "skill2",
+  "description": "#asset/base/text/champion?description.ghostrabbit.skill2",
+  "duration": 78,
+  "cooltime": 570,
+  "start_timing": 0,
+  "range": 90000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Delayed",
+        "tick": 4,
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "ghostrabbit_skill2_cast"
+          },
+          {
+            "type": "RangeEffect",
+            "shape": {
+              "Circle": {
+                "radius": 850000
+              }
+            },
+            "target": "AllyOnlySelf",
+            "apply_type": "AroundCaster",
+            "effects": [
+              {
+                "type": "ViewEffect",
+                "name": "ghostrabbit_skill2_effect",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 56,
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "ghostrabbit_skill2_throw"
+          },
+          {
+            "type": "TargetProjectile",
+            "name": "ghostrabbit_skill2_ball",
+            "speed": 3500,
+            "applied_target": "EnemyWithoutTower",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Combine",
+                  "effects": [
+                    {
+                      "type": "ApAttack",
+                      "damage": 120,
+                      "attack_ratio": 120
+                    },
+                    {
+                      "type": "Sfx",
+                      "name": "ghostrabbit_skill2_hit"
+                    },
+                    {
+                      "type": "ViewEffect",
+                      "name": "ghostrabbit_skill2_hit",
+                      "duration": 30
+                    }
+                  ]
+                },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.ghostrabbit.ult",
+  "duration": 40,
+  "cooltime": 3000,
+  "start_timing": 0,
+  "range": 83000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "can_use_with_move": true,
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "CasterAnimation",
+        "name": "ult",
+        "tick": 40
+      },
+      {
+        "type": "Sfx",
+        "name": "ghostrabbit_ult_cast"
+      },
+      {
+        "type": "ViewEffect",
+        "name": "ghostrabbit_ult_hit",
+        "duration": 30
+      },
+      {
+        "type": "WithSelf",
+        "effects": [
+          {
+            "type": "RandomTarget",
+            "range": 25000,
+            "casting_target": "AllyOnlySelf",
+            "effects": [
+              {
+                "type": "Heal",
+                "amount": 1,
+                "ap_ratio": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "MoveBack",
+        "speed": 2300,
+        "tick": 26
+      },
+      {
+        "type": "ApAttack",
+        "damage": 1,
+        "attack_ratio": 0
+      },
+      {
+        "type": "BlockSkill",
+        "tick": 210
+      },
+      {
+        "type": "AddBuff",
+        "buff_state": {
+          "name": "ghostrabbit_ult_debuff",
+          "duration": {
+            "Time": {
+              "tick": 210
+            }
+          },
+          "hp_mult": -55,
+          "is_hidden": false
+        }
+      },
+      {
+        "type": "Delayed",
+        "tick": 60,
+        "effects": [
+          {
+            "type": "RangeEffect",
+            "shape": {
+              "Circle": {
+                "radius": 1000
+              }
+            },
+            "target": "AllyOnlySelf",
+            "apply_type": "AroundCaster",
+            "effects": [
+              {
+                "type": "Heal",
+                "amount": 50,
+                "ap_ratio": 60
+              },
+              {
+                "type": "Sfx",
+                "name": "ghostrabbit_ult_heal"
+              },
+              {
+                "type": "ViewEffect",
+                "name": "ghostrabbit_ult_heal",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 120,
+        "effects": [
+          {
+            "type": "RangeEffect",
+            "shape": {
+              "Circle": {
+                "radius": 1000
+              }
+            },
+            "target": "AllyOnlySelf",
+            "apply_type": "AroundCaster",
+            "effects": [
+              {
+                "type": "Heal",
+                "amount": 50,
+                "ap_ratio": 60
+              },
+              {
+                "type": "Sfx",
+                "name": "ghostrabbit_ult_heal"
+              },
+              {
+                "type": "ViewEffect",
+                "name": "ghostrabbit_ult_heal",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 180,
+        "effects": [
+          {
+            "type": "RangeEffect",
+            "shape": {
+              "Circle": {
+                "radius": 1000
+              }
+            },
+            "target": "AllyOnlySelf",
+            "apply_type": "AroundCaster",
+            "effects": [
+              {
+                "type": "Heal",
+                "amount": 50,
+                "ap_ratio": 60
+              },
+              {
+                "type": "Sfx",
+                "name": "ghostrabbit_ult_heal"
+              },
+              {
+                "type": "ViewEffect",
+                "name": "ghostrabbit_ult_heal",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      }
+    ]
+   }
+ }
+}

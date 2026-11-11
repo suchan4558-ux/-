@@ -1,0 +1,492 @@
+{
+  "id": "candygel",
+  "name": "Candy Gel",
+  "category": "Util",
+  "tags": ["AD", "Melee", "CC", "Heal"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/candygel",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/candygel_skill",
+    "asset/leefs_variety_all/icons/candygel_skill2",
+    "asset/leefs_variety_all/icons/candygel_ult"
+  ],
+  "stat": {
+    "attack": 90,
+    "magic_power": 0,
+    "hp": 1000,
+    "defence": 30,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 20,
+    "magic_power": 0,
+    "hp": 90,
+    "defence": 8,
+    "magic_resistance": 4,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 70,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 27000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {"type": "Attack", "damage": 0, "attack_ratio": 100}
+      ]
+    }
+  },
+  
+"view_projectiles": [
+  {
+    "type": "Animated",
+    "name": "candygel_skill",
+    "anim": "asset/leefs_variety_all/effects/candygel_skill",
+    "tag": "candygel_skill",
+    "z": 0,
+    "repeat": true
+  },
+  {
+    "type": "Animated",
+    "name": "candygel_skill2",
+    "anim": "asset/leefs_variety_all/effects/candygel_skill2",
+    "tag": "candygel_skill2",
+    "z": 0,
+    "repeat": true
+  },
+  {
+    "type": "Animated",
+    "name": "candygel_skill_return",
+    "anim": "asset/leefs_variety_all/effects/candygel_skill_return",
+    "tag": "candygel_skill_return",
+    "z": 0,
+    "repeat": true
+  }
+],
+"view_effects": [
+    {
+      "type": "Animation",
+      "name": "candygel_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/candygel_skill_hit",
+      "tag": "candygel_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "candygel_skill2_heal",
+      "anim": "asset/leefs_variety_all/effects/candygel_skill2_heal",
+      "tag": "candygel_skill2_heal",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "candygel_ult",
+      "anim": "asset/leefs_variety_all/effects/candygel_ult",
+      "tag": "candygel_ult",
+      "z": -1,
+      "is_follow": false
+    }
+  ],
+
+"skill": {
+  "action_name": "skill",
+  "description": "#asset/base/text/champion?description.candygel.skill",
+  "duration": 35,
+  "cooltime": 370,
+  "start_timing": 0,
+  "range": 104000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Delayed",
+        "tick": 19,
+        "effects": [
+          { "type": "Sfx", "name": "candygel_skill_cast" },
+          {
+            "type": "LinearProjectile",
+            "name": "candygel_skill",
+            "speed": 2900,
+            "range": 116000,
+            "shape": { "Circle": { "radius": 3500 } },
+            "applied_target": "EnemyWithoutTower",
+            "penetrate": true,
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Combine",
+                  "effects": [
+                    { "type": "Attack", "damage": 40, "attack_ratio": 80 },
+                    { "type": "Bind", "duration": 60 },
+                    { "type": "Sfx", "name": "candygel_skill_hit1" },
+                    { "type": "ViewEffect", "name": "candygel_skill_hit", "duration": 24 }
+                  ]
+                }
+              }
+            ],
+            "end_effects": [
+              { "type": "Sfx", "name": "candygel_skill_return" },
+              {
+                "type": "BackToCasterLinearProjectile",
+                "penetrate": true,
+                "speed": 3400,
+                "range": 110000,
+                "name": "candygel_skill_return",
+                "shape": { "Circle": { "radius": 3500 } },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "Combine",
+                      "effects": [
+                        { "type": "Grab", "speed": 2300, "tick": 21 },
+                        { "type": "Sfx", "name": "candygel_skill_hit2" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"skill2": {
+  "action_name": "skill2",
+  "description": "#asset/base/text/champion?description.candygel.skill2",
+  "duration": 50,
+  "cooltime": 480,
+  "start_timing": 0,
+  "range": 65000,
+  "casting_type": "Targeting",
+  "casting_target": "AllyNotSelf",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Sfx",
+        "name": "candygel_skill2_cast"
+      },
+      {
+        "type": "Delayed",
+        "tick": 20,
+        "effects": [
+          {
+            "type": "TargetProjectile",
+            "name": "candygel_skill2",
+            "speed": 3800,
+            "applied_target": "AllyNotSelf",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Combine",
+                  "effects": [
+                    {
+                      "type": "Heal",
+                      "amount": 40,
+                      "attack_ratio": 90
+                    },
+                    {
+                      "type": "Sfx",
+                      "name": "candygel_skill2_heal"
+                    },
+                    {
+                      "type": "ViewEffect",
+                      "name": "candygel_skill2_heal",
+                      "duration": 30
+                    },
+                    {
+                      "type": "RangeEffect",
+                      "shape": {
+                        "Circle": {
+                          "radius": 10000
+                        }
+                      },
+                      "target": "AllyOnlySelf",
+                      "apply_type": "AroundCaster",
+                      "effects": [
+                        {
+                          "type": "Heal",
+                          "amount": 40,
+                          "attack_ratio": 90
+                        },
+                        {
+                          "type": "ViewEffect",
+                          "name": "candygel_skill2_heal",
+                          "duration": 30
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 50,
+        "effects": [
+          {
+            "type": "CasterAnimation",
+            "name": "skill2_jump",
+            "tick": 25
+          },
+          {
+            "type": "MoveToTarget",
+            "speed": 4200,
+            "applied_effects": []
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 50,
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "candygel_skill2_hop"
+          }
+        ]
+      }
+    ]
+  }
+},
+
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.candygel.ult",
+  "duration": 60,
+  "cooltime": 3300,
+  "start_timing": 0,
+  "cancelable": false,
+  "range": 72000,
+  "casting_type": "Direction",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Sfx",
+        "name": "candygel_ult_cast"
+      },
+      {
+        "type": "AddCasterBuff",
+        "buff_state": {
+          "name": "candygel_ult_unstoppable",
+          "duration": {
+            "Time": {
+              "tick": 60
+            }
+          },
+          "cc_immune": true,
+          "is_hidden": true
+        }
+      },
+      {
+        "type": "Delayed",
+        "tick": 10,
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "candygel_ult_move"
+          },
+          {
+            "type": "RushTime",
+            "speed": 2700,
+            "tick": 44,
+            "range": 72000,
+            "casting_target": "EnemyChampion",
+            "penetrate": true,
+            "applied_effects": []
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 10,
+        "effects": [
+          {
+            "type": "LinearProjectile",
+            "name": "",
+            "speed": 1000,
+            "range": 1,
+            "penetrate": true,
+            "applied_target": "None",
+            "applied_effects": [],
+            "end_effects": [
+              {
+                "type": "ViewEffect",
+                "name": "candygel_ult",
+                "duration": 240
+              },
+              {
+                "type": "Sfx",
+                "name": "candygel_ult_pool"
+              },
+              {
+                "type": "RangePeriodProjectile",
+                "name": "",
+                "tick": 240,
+                "period": 30,
+                "first_delay": 0,
+                "shape": {
+                  "Circle": {
+                    "radius": 41000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "AddBuff",
+                      "buff_state": {
+                        "name": "candygel_ult_slow",
+                        "duration": {
+                          "Time": {
+                            "tick": 30
+                          }
+                        },
+                        "move_speed_mult": -75,
+                        "is_hidden": true
+                      }
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              },
+              {
+                "type": "RangePeriodProjectile",
+                "name": "",
+                "tick": 240,
+                "period": 30,
+                "first_delay": 0,
+                "shape": {
+                  "Circle": {
+                    "radius": 39000
+                  }
+                },
+                "applied_target": "Ally",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "Heal",
+                      "amount": 25,
+                      "attack_ratio": 30
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 54,
+        "effects": [
+          {
+            "type": "LinearProjectile",
+            "name": "",
+            "speed": 1000,
+            "range": 1,
+            "penetrate": true,
+            "applied_target": "None",
+            "applied_effects": [],
+            "end_effects": [
+              {
+                "type": "ViewEffect",
+                "name": "candygel_ult",
+                "duration": 240
+              },
+              {
+                "type": "Sfx",
+                "name": "candygel_ult_pool"
+              },
+              {
+                "type": "RangePeriodProjectile",
+                "name": "",
+                "tick": 240,
+                "period": 30,
+                "first_delay": 0,
+                "shape": {
+                  "Circle": {
+                    "radius": 39000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "AddBuff",
+                      "buff_state": {
+                        "name": "candygel_ult_slow",
+                        "duration": {
+                          "Time": {
+                            "tick": 30
+                          }
+                        },
+                        "move_speed_mult": -75,
+                        "is_hidden": true
+                      }
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              },
+              {
+                "type": "RangePeriodProjectile",
+                "name": "",
+                "tick": 240,
+                "period": 30,
+                "first_delay": 0,
+                "shape": {
+                  "Circle": {
+                    "radius": 41000
+                  }
+                },
+                "applied_target": "Ally",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "Heal",
+                      "amount": 25,
+                      "attack_ratio": 30
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+}

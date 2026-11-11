@@ -1,0 +1,440 @@
+{
+  "id": "panda",
+  "category": "Melee",
+  "tags": [
+    "Tank",
+    "CC"
+  ],
+  "sprite": "asset/cf_space_viking/champions/panda",
+  "anim_prefix": "",
+  "stat": {
+    "attack": 80,
+    "crit_chance": 0,
+    "defence": 45,
+    "hp": 1100,
+    "hp_regen": 0,
+    "magic_power": 0,
+    "magic_resistance": 25,
+    "move_speed": 1100,
+    "stack": 0
+  },
+  "skill_icons": [
+    "asset/cf_space_viking/icons/panda_skill",
+    "asset/cf_space_viking/icons/panda_skill2",
+    "asset/cf_space_viking/icons/panda_ult"
+  ],
+  "growth": {
+    "attack": 20,
+    "crit_chance": 0,
+    "defence": 13,
+    "hp": 100,
+    "hp_regen": 0,
+    "magic_power": 0,
+    "magic_resistance": 5,
+    "move_speed": 10,
+    "stack": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "attack_type": "BaseAttack",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "Enemy",
+    "casting_type": "Targeting",
+    "cooltime": 60,
+    "description": "#asset/base/text/champion?description.panda.attack",
+    "duration": 25,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "Attack",
+          "damage": 0,
+          "attack_ratio": 100,
+          "ap_ratio": 0,
+          "hp_ratio": 0,
+          "target_hp_ratio": 0,
+          "attack_effect_type": "Target"
+        },
+        {
+          "type": "Sfx",
+          "name": ""
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 20000,
+    "start_timing": 3
+  },
+  "skill": {
+    "action_name": "skill",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": true,
+    "casting_target": "Enemy",
+    "casting_type": "Targeting",
+    "cooltime": 240,
+    "description": "#asset/base/text/champion?description.panda.skill",
+    "duration": 28,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "SwitchByBuff",
+          "buff_name": "panda_allow_jump",
+          "effect_none": {
+            "type": "Combine",
+            "effects": [
+              {
+                "type": "Attack",
+                "damage": 40,
+                "attack_ratio": 70,
+                "ap_ratio": 0,
+                "hp_ratio": 0,
+                "target_hp_ratio": 0,
+                "attack_effect_type": "Target"
+              },
+              {
+                "type": "AddBuff",
+                "buff_state": {
+                  "name": "panda_mark",
+                  "duration": {
+                    "Time": {
+                      "tick": 120
+                    }
+                  },
+                  "defence_mult": -20,
+                  "magic_resistance": -20
+                }
+              }
+            ]
+          },
+          "effect_buff": {
+            "type": "Combine",
+            "effects": [
+              {
+                "type": "MoveToTarget",
+                "speed": 4200,
+                "range": 65000,
+                "end_effects": [
+                  {
+                    "type": "Delayed",
+                    "tick": 10,
+                    "effects": [
+                      {
+                        "type": "Attack",
+                        "damage": 40,
+                        "attack_ratio": 70,
+                        "ap_ratio": 0,
+                        "hp_ratio": 0,
+                        "target_hp_ratio": 0,
+                        "attack_effect_type": "Target"
+                      },
+                      {
+                        "type": "AddBuff",
+                        "buff_state": {
+                          "name": "panda_mark",
+                          "duration": {
+                            "Time": {
+                              "tick": 120
+                            }
+                          },
+                          "defence_mult": -20,
+                          "magic_resistance": -20
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "RemoveCasterBuff",
+                "name": "panda_allow_jump"
+              },
+              {
+                "type": "CasterAnimation",
+                "name": "ult_ground_pound",
+                "tick": 40
+              }
+            ]
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "dokkaebi_attack"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 24000,
+    "start_timing": 5
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "Enemy",
+    "casting_type": "Targeting",
+    "cooltime": 600,
+    "description": "#asset/base/text/champion?description.panda.skill2",
+    "duration": 25,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "RangeEffect",
+          "shape": {
+            "Circle": {
+              "radius": 30000
+            }
+          },
+          "target": "Enemy",
+          "apply_type": "AroundCaster",
+          "effects": [
+            {
+              "type": "Attack",
+              "damage": 50,
+              "attack_ratio": 60,
+              "ap_ratio": 0,
+              "hp_ratio": 0,
+              "target_hp_ratio": 0,
+              "attack_effect_type": "Target"
+            },
+            {
+              "type": "Native",
+              "effect_ref": "damage_per_buff"
+            }
+          ]
+        },
+        {
+          "type": "Sfx",
+          "name": "boomerang_hunter_skill2"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 0,
+    "start_timing": 5
+  },
+  "ult": {
+    "action_name": "ult",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "EnemyChampion",
+    "casting_type": "Targeting",
+    "cooltime": 3000,
+    "description": "#asset/base/text/champion?description.panda.ult",
+    "duration": 22,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "LinearProjectile",
+          "penetrate": false,
+          "speed": 4200,
+          "range": 95000,
+          "name": "ult_projectile",
+          "y_offset": 0,
+          "shape": {
+            "Circle": {
+              "radius": 15000
+            }
+          },
+          "applied_target": "EnemyChampion",
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "Attack",
+                "damage": 60,
+                "attack_ratio": 80,
+                "ap_ratio": 0,
+                "hp_ratio": 0,
+                "target_hp_ratio": 0,
+                "attack_effect_type": "Target"
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "AddCasterBuff",
+                "only_to_enemy": false,
+                "buff_state": {
+                  "name": "panda_allow_jump",
+                  "duration": {
+                    "Time": {
+                      "tick": 360
+                    }
+                  }
+                }
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 1,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_view"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 20,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 40,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 60,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 80,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 100,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 120,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 140,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 160,
+                "effects": [
+                  {
+                    "type": "Native",
+                    "effect_ref": "ult_slow"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            }
+          ],
+          "end_effects": []
+        },
+        {
+          "type": "Sfx",
+          "name": "barrier_magician_attack"
+        },
+        {
+          "type": "TargetSfx",
+          "name": "barrier_magician_ult"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 95000,
+    "start_timing": 5
+  },
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "ult_spawn",
+      "anim": "asset/cf_space_viking/panda/panda/panda_ult_bamboo",
+      "tag": "ult_spawn",
+      "z": -1,
+      "is_follow": false
+    }
+  ],
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "ult_projectile",
+      "anim": "asset/cf_space_viking/panda/panda/pandault_projectile",
+      "tag": "ult",
+      "repeat": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "panda_mark",
+      "anim": "asset/cf_space_viking/panda/panda/panda_mark",
+      "tag": "panda_mark"
+    }
+  ],
+  "passive": {
+    "passive_ref": "cf_space_viking:forge_runtime_panda",
+    "params": {}
+  },
+  "stack_skill_index": 0
+}

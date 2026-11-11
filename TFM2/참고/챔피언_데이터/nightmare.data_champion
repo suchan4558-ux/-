@@ -1,0 +1,191 @@
+{
+  "id": "nightmare",
+  "category": "Assassin",
+  "tags": [
+    "AD"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/nightmare",
+  "stat": {
+    "attack": 120,
+    "magic_power": 0,
+    "hp": 900,
+    "defence": 25,
+    "magic_resistance": 15,
+    "move_speed": 1100,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 30,
+    "magic_power": 0,
+    "hp": 80,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 14,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "nightmare_attack",
+    "duration": 20,
+    "cooltime": 50,
+    "start_timing": 13,
+    "cancelable": true,
+    "range": 23000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Attack",
+      "damage": 0,
+      "attack_ratio": 100
+    }
+  },
+  "skill": {
+    "action_name": "skill",
+    "patch_type_name": "nightmare_skill",
+    "description": "#asset/base/text/champion?description.nightmare.skill",
+    "duration": 22,
+    "cooltime": 360,
+    "cooltime_use_count": 3,
+    "start_timing": 10,
+    "cancelable": false,
+    "range": 46000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "ViewEffect",
+          "name": "nightmare_skill_cast",
+          "range": 46000,
+          "speed": 6500,
+          "time": 8
+        },
+        {
+          "type": "LinearProjectile",
+          "penetrate": false,
+          "speed": 6500,
+          "range": 46000,
+          "name": "nightmare_skill_projectile",
+          "y_offset": 900,
+          "shape": {
+            "Circle": {
+              "radius": 5000
+            }
+          },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "Attack",
+                "damage": 35,
+                "attack_ratio": 80
+              },
+              "casting_type": "Targeting"
+            }
+          ],
+          "end_effects": []
+        }
+      ]
+    }
+  },
+  "skill2": {
+    "action_name": "skill2_dash",
+    "patch_type_name": "nightmare_skill2",
+    "description": "#asset/base/text/champion?description.nightmare.skill2",
+    "duration": 28,
+    "cooltime": 420,
+    "start_timing": 4,
+    "cancelable": false,
+    "range": 60000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "MoveTo",
+          "speed": 5600,
+          "range": 60000,
+          "end_effects": [
+            {
+              "type": "CasterInvisible",
+              "tick": 150
+            },
+            {
+              "type": "CasterViewEffect",
+              "name": "nightmare_vanish"
+            },
+            {
+              "type": "CasterAnimation",
+              "name": "skill2_attack",
+              "tick": 18
+            },
+            {
+              "type": "ViewEffect",
+              "name": "nightmare_skill2_burst",
+              "radius": 40000
+            },
+            {
+              "type": "RangeEffect",
+              "shape": {
+                "Circle": {
+                  "radius": 40000
+                }
+              },
+              "target": "EnemyWithoutTower",
+              "effects": [
+                {
+                  "type": "Attack",
+                  "damage": 50,
+                  "attack_ratio": 90
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult_dash",
+    "patch_type_name": "nightmare_ult",
+    "description": "#asset/base/text/champion?description.nightmare.ult",
+    "duration": 32,
+    "cooltime": 3000,
+    "start_timing": 4,
+    "cancelable": false,
+    "range": 80000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "nightmare_ult",
+      "speed": 6800,
+      "range": 80000,
+      "damage": 150,
+      "attack_ratio": 140,
+      "teleport_offset": 2000
+    }
+  },
+  "view_effects": [],
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "nightmare_skill_projectile",
+      "anim": "asset/base/aseprite_resources/champions/nightmare",
+      "tag": "skill_projectile",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_buffs": []
+}

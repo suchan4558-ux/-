@@ -1,0 +1,173 @@
+{
+  "id": "strongman",
+  "category": "Melee",
+  "tags": [
+    "AD",
+    "Tank",
+    "CC",
+    "Shield"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/strongman",
+  "stat": {
+    "attack": 75,
+    "magic_power": 0,
+    "hp": 1150,
+    "defence": 40,
+    "magic_resistance": 30,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 0,
+    "hp": 120,
+    "defence": 10,
+    "magic_resistance": 5,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "strongman_attack",
+    "duration": 24,
+    "cooltime": 75,
+    "start_timing": 14,
+    "cancelable": true,
+    "range": 28000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "Attack",
+          "damage": 0,
+          "attack_ratio": 100
+        },
+        {
+          "type": "ViewEffect",
+          "name": "strongman_attack_hit"
+        },
+        {
+          "type": "TargetSfx",
+          "name": "strongman_attack_hit"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill1",
+    "patch_type_name": "strongman_skill1",
+    "description": "#asset/base/text/champion?description.strongman.skill",
+    "duration": 24,
+    "cooltime": 360,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 30000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "strongman_skill1",
+      "speed": 4000,
+      "damage": 60,
+      "attack_ratio": 90,
+      "stun": 30,
+      "move_distance": 20000
+    }
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "patch_type_name": "strongman_skill2",
+    "description": "#asset/base/text/champion?description.strongman.skill2",
+    "duration": 24,
+    "cooltime": 300,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 42000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "WithSelf",
+          "effects": [
+            {
+              "type": "ViewEffect",
+              "name": "strongman_skill2_swing",
+              "radius": 42000,
+              "time": 24
+            }
+          ]
+        },
+        {
+          "type": "RangeEffect",
+          "shape": {
+            "Circle": {
+              "radius": 42000
+            }
+          },
+          "target": "EnemyWithoutTower",
+          "apply_type": "AroundCaster",
+          "effects": [
+            {
+              "type": "Attack",
+              "damage": 70,
+              "attack_ratio": 100
+            },
+            {
+              "type": "ViewEffect",
+              "name": "strongman_skill2_hit"
+            },
+            {
+              "type": "TargetSfx",
+              "name": "strongman_skill2_hit"
+            },
+            {
+              "type": "Knockback",
+              "speed": 2800,
+              "tick": 12
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult_throw",
+    "patch_type_name": "strongman_ult",
+    "description": "#asset/base/text/champion?description.strongman.ult",
+    "duration": 24,
+    "cooltime": 3000,
+    "start_timing": 10,
+    "cancelable": false,
+    "range": 90000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "strongman_ult",
+      "speed": 6000,
+      "damage": 110,
+      "attack_ratio": 90,
+      "stun": 90,
+      "ally_range": 50000,
+      "shield": 300,
+      "shield_duration": 240,
+      "radius": 30000,
+      "self_stun": 60
+    }
+  },
+  "view_effects": [],
+  "view_projectiles": [],
+  "view_buffs": []
+}

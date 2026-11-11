@@ -1,0 +1,641 @@
+{
+  "id": "voidling",
+  "name": "Voidling",
+  "category": "Magician",
+  "tags": ["AP", "Range"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/voidling",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/voidling_skill",
+    "asset/leefs_variety_all/icons/voidling_skill2",
+    "asset/leefs_variety_all/icons/voidling_ult"
+  ],
+  "stat": {
+    "attack": 80,
+    "magic_power": 40,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 20,
+    "hp": 100,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5000,
+      "name": "voidling_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "voidling_projectile",
+      "anim": "asset/leefs_variety_all/effects/voidling_projectile",
+      "tag": "voidling_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "voidling_skill",
+      "anim": "asset/leefs_variety_all/effects/voidling_skill",
+      "tag": "voidling_skill",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "voidling_yellowball",
+      "anim": "asset/leefs_variety_all/effects/voidling_yellowball",
+      "tag": "voidling_yellowball",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "voidling_purpleball",
+      "anim": "asset/leefs_variety_all/effects/voidling_purpleball",
+      "tag": "voidling_purpleball",
+      "z": 0,
+      "repeat": true
+    }
+	],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "voidling_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/voidling_skill_hit",
+      "tag": "voidling_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "voidling_yellowball_hit",
+      "anim": "asset/leefs_variety_all/effects/voidling_yellowball_hit",
+      "tag": "voidling_yellowball_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "voidling_purpleball_hit",
+      "anim": "asset/leefs_variety_all/effects/voidling_purpleball_hit",
+      "tag": "voidling_purpleball_hit",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+"skill": {
+  "action_name": "skill",
+  "description": "#asset/base/text/champion?description.voidling.skill",
+  "duration": 28,
+  "cooltime": 200,
+  "start_timing": 8,
+  "range": 90000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "voidling_skill_cast" },
+      {
+        "type": "Delayed",
+        "tick": 5,
+        "effects": [
+          {
+            "type": "TargetSplashProjectile",
+            "speed": 2500,
+            "name": "voidling_skill",
+            "range": 45000,
+            "y_offset": 0,
+            "applied_target": "EnemyWithoutTower",
+            "applied_effects": [
+              {
+                "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "TargetSfx", "name": "voidling_skill_hit" },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "ViewEffect", "name": "voidling_skill_hit", "duration": 30 },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"skill2": {
+  "action_name": "skill2",
+  "description": "#asset/base/text/champion?description.voidling.skill2",
+  "duration": 48,
+  "cooltime": 390,
+  "start_timing": 0,
+  "range": 81000,
+  "casting_type": "Direction",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "voidling_skill2_cast" },
+      {
+        "type": "Delayed",
+        "tick": 12,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_skill2_throw" },
+          {
+            "type": "LinearProjectile",
+            "name": "voidling_yellowball",
+            "speed": 4400,
+            "range": 90000,
+            "shape": { "Circle": { "radius": 1600 } },
+            "applied_target": "EnemyWithoutTower",
+            "penetrate": false,
+            "applied_effects": [
+              {
+                "effect": { "type": "ApAttack", "damage": 50, "attack_ratio": 60 },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "TargetSfx", "name": "voidling_skill2_hit" },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": {
+                  "type": "TargetProjectile",
+                  "speed": 99999,
+                  "name": "voidling_invisible_ball",
+                  "applied_target": "EnemyChampion",
+                  "applied_effects": [
+                    {
+                      "effect": {
+                        "type": "AddCasterBuff",
+                        "buff_state": {
+                          "name": "voidling_ap_stack",
+                          "duration": "Permanent",
+                          "magic_power": 3,
+                          "is_hidden": true,
+                          "can_stack": true
+                        }
+                      },
+                      "casting_type": "Targeting"
+                    }
+                  ]
+                },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 20,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_skill2_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 83000,
+            "casting_target": "EnemyWithoutTower",
+            "effects": [
+              {
+                "type": "LinearProjectile",
+                "name": "voidling_purpleball",
+                "speed": 4400,
+                "range": 90000,
+                "shape": { "Circle": { "radius": 1600 } },
+                "applied_target": "EnemyWithoutTower",
+                "penetrate": false,
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 50, "attack_ratio": 60 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_skill2_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_purpleball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "TargetProjectile",
+                      "speed": 99999,
+                      "name": "voidling_invisible_ball",
+                      "applied_target": "EnemyChampion",
+                      "applied_effects": [
+                        {
+                          "effect": {
+                            "type": "AddCasterBuff",
+                            "buff_state": {
+                              "name": "voidling_ap_stack",
+                              "duration": "Permanent",
+                              "magic_power": 3,
+                              "is_hidden": true,
+                              "can_stack": true
+                            }
+                          },
+                          "casting_type": "Targeting"
+                        }
+                      ]
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 28,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_skill2_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 85000,
+            "casting_target": "EnemyWithoutTower",
+            "effects": [
+              {
+                "type": "LinearProjectile",
+                "name": "voidling_yellowball",
+                "speed": 4400,
+                "range": 90000,
+                "shape": { "Circle": { "radius": 1600 } },
+                "applied_target": "EnemyWithoutTower",
+                "penetrate": false,
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 50, "attack_ratio": 60 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_skill2_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "TargetProjectile",
+                      "speed": 99999,
+                      "name": "voidling_invisible_ball",
+                      "applied_target": "EnemyChampion",
+                      "applied_effects": [
+                        {
+                          "effect": {
+                            "type": "AddCasterBuff",
+                            "buff_state": {
+                              "name": "voidling_ap_stack",
+                              "duration": "Permanent",
+                              "magic_power": 3,
+                              "is_hidden": true,
+                              "can_stack": true
+                            }
+                          },
+                          "casting_type": "Targeting"
+                        }
+                      ]
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.voidling.ult",
+  "duration": 72,
+  "cooltime": 3000,
+  "start_timing": 0,
+  "cancelable": true,
+  "range": 82000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "voidling_ult_cast" },
+      {
+        "type": "Delayed",
+        "tick": 12,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 87000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_yellowball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Stun", "duration": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 20,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw2" },
+          {
+            "type": "RandomTarget",
+            "range": 88000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_purpleball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_purpleball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Fear", "tick": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 28,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 88000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_yellowball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Charm", "tick": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 36,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw2" },
+          {
+            "type": "RandomTarget",
+            "range": 87000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_purpleball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_purpleball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Airborne", "duration": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 44,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 88000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_yellowball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Bind", "duration": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 52,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw2" },
+          {
+            "type": "RandomTarget",
+            "range": 88000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_purpleball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_purpleball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "BlockSkill", "tick": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 60,
+        "effects": [
+          { "type": "Sfx", "name": "voidling_ult_throw" },
+          {
+            "type": "RandomTarget",
+            "range": 88000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              {
+                "type": "TargetProjectile",
+                "speed": 6000,
+                "name": "voidling_yellowball",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "ApAttack", "damage": 40, "attack_ratio": 40 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "voidling_ult_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "voidling_yellowball_hit", "duration": 30 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Taunt", "duration": 30 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+}

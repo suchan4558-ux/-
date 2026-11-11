@@ -1,0 +1,223 @@
+{
+  "id": "spellbreaker",
+  "category": "Melee",
+  "tags": [
+    "AD",
+    "AP",
+    "CC",
+    "Melee"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/spellbreaker",
+  "stat": {
+    "attack": 100,
+    "magic_power": 20,
+    "hp": 1000,
+    "defence": 30,
+    "magic_resistance": 30,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 18,
+    "magic_power": 10,
+    "hp": 100,
+    "defence": 9,
+    "magic_resistance": 5,
+    "move_speed": 12,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "spellbreaker_attack",
+    "duration": 24,
+    "cooltime": 60,
+    "start_timing": 14,
+    "cancelable": true,
+    "range": 28000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "Attack",
+          "damage": 0,
+          "attack_ratio": 100
+        },
+        {
+          "type": "ViewEffect",
+          "name": "spellbreaker_attack_hit"
+        },
+        {
+          "type": "TargetSfx",
+          "name": "spellbreaker_attack_hit"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill",
+    "patch_type_name": "spellbreaker_skill1",
+    "description": "#asset/base/text/champion?description.spellbreaker.skill",
+    "duration": 20,
+    "cooltime": 270,
+    "start_timing": 10,
+    "cancelable": false,
+    "range": 38000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "LineRangeProjectile",
+      "width": 28000,
+      "length": 38000,
+      "delay": 8,
+      "apply": 3,
+      "name": "spellbreaker_skill1",
+      "applied_target": "EnemyWithoutTower",
+      "applied_effects": [
+        {
+          "effect": {
+            "type": "Attack",
+            "damage": 72,
+            "attack_ratio": 100
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "AddBuff",
+            "buff_state": {
+              "name": "spellbreaker_skill1_slow",
+              "duration": {
+                "Time": {
+                  "tick": 90
+                }
+              },
+              "move_speed_mult": -30
+            }
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "ViewEffect",
+            "name": "spellbreaker_skill1_hit"
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "TargetSfx",
+            "name": "spellbreaker_skill1_hit"
+          },
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "patch_type_name": "spellbreaker_skill2",
+    "description": "#asset/base/text/champion?description.spellbreaker.skill2",
+    "duration": 20,
+    "cooltime": 360,
+    "start_timing": 4,
+    "cancelable": false,
+    "range": 48000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "ViewEffect",
+          "name": "spellbreaker_skill2_dash",
+          "range": 48000,
+          "time": 8
+        },
+        {
+          "type": "Rush",
+          "speed": 6000,
+          "range": 15000,
+          "casting_target": "EnemyWithoutTower",
+          "penetrate": false,
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "Attack",
+                "damage": 82,
+                "attack_ratio": 105
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "ViewEffect",
+                "name": "spellbreaker_skill2_hit"
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "TargetSfx",
+                "name": "spellbreaker_skill2_hit"
+              },
+              "casting_type": "Targeting"
+            }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 8,
+          "effects": [
+            {
+              "type": "AddCasterBuff",
+              "buff_state": {
+                "name": "spellbreaker_skill2_guard",
+                "duration": {
+                  "Time": {
+                    "tick": 150
+                  }
+                },
+                "damaged_reduce": 25
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "patch_type_name": "spellbreaker_ult",
+    "description": "#asset/base/text/champion?description.spellbreaker.ult",
+    "duration": 24,
+    "cooltime": 3000,
+    "start_timing": 14,
+    "cancelable": false,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "spellbreaker_ult",
+      "damage": 140,
+      "bonus_damage": 120,
+      "attack_ratio": 100,
+      "stun": 60,
+      "radius": 60000,
+      "block_duration": 180
+    }
+  },
+  "view_effects": [],
+  "view_projectiles": [],
+  "view_buffs": []
+}

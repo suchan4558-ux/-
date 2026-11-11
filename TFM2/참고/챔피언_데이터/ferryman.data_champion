@@ -1,0 +1,150 @@
+{
+  "id": "ferryman",
+  "category": "Util",
+  "tags": [
+    "AP",
+    "Heal",
+    "CC"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/ferryman",
+  "stat": {
+    "attack": 80,
+    "magic_power": 30,
+    "hp": 950,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 15,
+    "hp": 90,
+    "defence": 8,
+    "magic_resistance": 4,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "ferryman_attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 4600,
+      "y_offset": -4000,
+      "name": "ferryman_attack",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "ViewEffect",
+            "name": "ferryman_attack_hit"
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "TargetSfx",
+            "name": "ferryman_attack_hit"
+          },
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill1",
+    "patch_type_name": "ferryman_skill1",
+    "description": "#asset/base/text/champion?description.ferryman.skill",
+    "duration": 28,
+    "cooltime": 270,
+    "start_timing": 14,
+    "cancelable": false,
+    "range": 90000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "ferryman_skill1",
+      "damage": 190,
+      "attack_ratio": 100,
+      "line_width": 14000,
+      "speed": 6500,
+      "move_distance": 5000,
+      "amplify": 30,
+      "buff_duration": 120,
+      "slow_ratio": 60,
+      "slow_duration": 120,
+      "ally_hp_ratio": 50
+    }
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "patch_type_name": "ferryman_skill2",
+    "description": "#asset/base/text/champion?description.ferryman.skill2",
+    "duration": 28,
+    "cooltime": 420,
+    "start_timing": 14,
+    "cancelable": false,
+    "range": 70000,
+    "casting_type": "Direction",
+    "casting_target": "BothChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "ferryman_skill2",
+      "line_width": 24000,
+      "buff_duration": 300,
+      "amplify": 50,
+      "slow_ratio": 60
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "patch_type_name": "ferryman_ult",
+    "description": "#asset/base/text/champion?description.ferryman.ult",
+    "duration": 30,
+    "cooltime": 1200,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 70000,
+    "casting_type": "Targeting",
+    "casting_target": "AllyNotSelf",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Native",
+      "effect_ref": "ferryman_ult",
+      "damage": 650,
+      "attack_ratio": 100,
+      "buff_duration": 90,
+      "move_distance": 60000,
+      "slow_ratio": 30,
+      "slow_duration": 120,
+      "ally_hp_ratio": 40
+    }
+  },
+  "view_effects": [],
+  "view_projectiles": [],
+  "view_buffs": []
+}

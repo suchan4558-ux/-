@@ -1,0 +1,438 @@
+{
+  "id": "witness",
+  "name": "Witness",
+  "category": "Range",
+  "tags": ["AD", "Range", "CC"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/witness",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/witness_skill",
+    "asset/leefs_variety_all/icons/witness_skill2",
+    "asset/leefs_variety_all/icons/witness_ult"
+  ],
+  "stat": {
+    "attack": 100,
+    "magic_power": 0,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 15,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 15,
+    "magic_power": 0,
+    "hp": 90,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 60,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5000,
+      "name": "witness_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "witness_projectile",
+      "anim": "asset/leefs_variety_all/effects/witness_projectile",
+      "tag": "witness_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "witness_skill_projectile",
+      "anim": "asset/leefs_variety_all/effects/witness_skill_projectile",
+      "tag": "witness_skill_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "witness_skill2_projectile",
+      "anim": "asset/leefs_variety_all/effects/witness_skill2_projectile",
+      "tag": "witness_skill2_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "witness_skill2_projectile2",
+      "anim": "asset/leefs_variety_all/effects/witness_skill2_projectile2",
+      "tag": "witness_skill2_projectile2",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "witness_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/witness_skill_hit",
+      "tag": "witness_skill_hit",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "witness_skill2_hit",
+      "anim": "asset/leefs_variety_all/effects/witness_skill2_hit",
+      "tag": "witness_skill2_hit",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "witness_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/witness_ult_hit",
+      "tag": "witness_ult_hit",
+      "z": 0,
+      "is_follow": false
+    },
+	{
+      "type": "Animation",
+      "name": "witness_ult_hit2",
+      "anim": "asset/leefs_variety_all/effects/witness_ult_hit2",
+      "tag": "witness_ult_hit2",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "witness_virtuous",
+      "anim": "asset/leefs_variety_all/effects/witness_virtuous",
+      "tag": "witness_virtuous",
+      "z": 1,
+      "repeat": true
+    }
+  ],
+"skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.witness.skill",
+    "duration": 33,
+    "cooltime": 300,
+    "start_timing": 0,
+    "range": 96000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "witness_virtue_lock",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_skill_cast" },
+          {
+            "type": "Delayed",
+            "tick": 13,
+            "effects": [
+              { "type": "Sfx", "name": "witness_skill_projectile" },
+              {
+                "type": "LinearProjectile",
+                "name": "witness_skill_projectile",
+                "speed": 3500,
+                "range": 102000,
+                "penetrate": false,
+                "shape": {
+                  "Rect": {
+                    "width": 7000,
+                    "height": 9000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "Attack", "damage": 65, "attack_ratio": 100 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "witness_skill_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "witness_skill_hit", "duration": 24 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "AddCasterBuff",
+                      "buff_state": {
+                        "name": "witness_virtuous",
+                        "duration": { "Time": { "tick": 360 } },
+                        "attack_mult": 30,
+                        "defence_mult": 30,
+                        "magic_resistance_mult": 30
+                      }
+                    },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "AddCasterBuff",
+                      "buff_state": {
+                        "name": "witness_virtue_lock",
+                        "duration": { "Time": { "tick": 720 } },
+                        "is_hidden": true
+                      }
+                    },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "WithSelf",
+                      "effects": [
+                        { "type": "Delayed", "tick": 30, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 60, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 90, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 120, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 150, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 180, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 210, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 240, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 270, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 300, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 330, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] },
+                        { "type": "Delayed", "tick": 360, "effects": [{ "type": "Heal", "amount": 0, "attack_ratio": 5 }] }
+                      ]
+                    },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_skill_cast" },
+          {
+            "type": "Delayed",
+            "tick": 12,
+            "effects": [
+              { "type": "Sfx", "name": "witness_skill_projectile" },
+              {
+                "type": "LinearProjectile",
+                "name": "witness_skill_projectile",
+                "speed": 3400,
+                "range": 101000,
+                "penetrate": false,
+                "shape": {
+                  "Rect": {
+                    "width": 6000,
+                    "height": 8000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "Attack", "damage": 65, "attack_ratio": 100 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "witness_skill_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "witness_skill_hit", "duration": 24 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.witness.skill2",
+    "duration": 51,
+    "cooltime": 360,
+    "start_timing": 0,
+    "range": 100000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "witness_virtuous",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_skill2_cast" },
+          {
+            "type": "Delayed",
+            "tick": 30,
+            "effects": [
+              { "type": "Sfx", "name": "witness_skill2_throw" },
+              {
+                "type": "LinearProjectile",
+                "name": "witness_skill2_projectile",
+                "speed": 3400,
+                "range": 120000,
+                "penetrate": true,
+                "shape": {
+                  "Circle": {
+                    "radius": 14000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "Attack", "damage": 90, "attack_ratio": 90 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Knockback", "speed": 3400, "tick": 12 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "witness_skill2_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "witness_skill2_hit", "duration": 24 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_skill2_cast" },
+          {
+            "type": "Delayed",
+            "tick": 30,
+            "effects": [
+              { "type": "Sfx", "name": "witness_skill2_throw2" },
+              {
+                "type": "LinearProjectile",
+                "name": "witness_skill2_projectile2",
+                "speed": 3100,
+                "range": 138000,
+                "penetrate": true,
+                "shape": {
+                  "Circle": {
+                    "radius": 26000
+                  }
+                },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  {
+                    "effect": { "type": "Attack", "damage": 120, "attack_ratio": 130 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "Airborne", "duration": 60 },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "witness_skill2_hit" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "witness_skill2_hit", "duration": 24 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.witness.ult",
+    "duration": 59,
+    "cooltime": 3000,
+    "start_timing": 0,
+    "range": 75000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "witness_virtuous",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_ult_cast" },
+          {
+            "type": "Delayed",
+            "tick": 35,
+            "effects": [
+              { "type": "RemoveCasterBuff", "name": "witness_virtue_lock" },
+              { "type": "Sfx", "name": "witness_ult_hit" },
+              { "type": "ViewEffect", "name": "witness_ult_hit", "duration": 24 },
+              { "type": "FixedAttack", "damage": 100, "attack_ratio": 110 }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "witness_ult_cast" },
+          {
+            "type": "Delayed",
+            "tick": 35,
+            "effects": [
+              { "type": "RemoveCasterBuff", "name": "witness_virtue_lock" },
+              { "type": "Sfx", "name": "witness_ult_hit" },
+              { "type": "ViewEffect", "name": "witness_ult_hit", "duration": 24 },
+              { "type": "FixedAttack", "damage": 100, "attack_ratio": 110 }
+            ]
+          },
+          {
+            "type": "Delayed",
+            "tick": 100,
+            "effects": [
+              { "type": "Sfx", "name": "witness_ult_hit2" },
+              { "type": "ViewEffect", "name": "witness_ult_hit2", "duration": 24 },
+              { "type": "FixedAttack", "damage": 80, "attack_ratio": 80 },
+              { "type": "Stun", "duration": 30 }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "id": "alchemist",
+  "category": "Magician",
+  "tags": [
+    "AP",
+    "Dot",
+    "CC",
+    "Magic"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/alchemist",
+  "stat": {
+    "attack": 80,
+    "magic_power": 40,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 20,
+    "hp": 100,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "alchemist_attack",
+    "duration": 30,
+    "cooltime": 90,
+    "start_timing": 15,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 4300,
+      "y_offset": 1500,
+      "name": "alchemist_attack",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "TargetSfx",
+            "name": "alchemist_attack_hit"
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "ViewEffect",
+            "name": "alchemist_attack_hit"
+          },
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill1",
+    "patch_type_name": "alchemist_skill",
+    "description": "#asset/base/text/champion?description.alchemist.skill",
+    "duration": 32,
+    "cooltime": 600,
+    "start_timing": 16,
+    "cancelable": false,
+    "range": 70000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "ParabolicProjectile",
+      "name": "alchemist_skill1_projectile",
+      "travel_time": 28,
+      "range": 70000,
+      "shape": {
+        "Circle": {
+          "radius": 9000
+        }
+      },
+      "applied_target": "EnemyWithoutTower",
+      "applied_effects": [],
+      "end_effects": [
+        {
+          "type": "TargetSfx",
+          "name": "alchemist_skill_hit"
+        },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "alchemist_skill1_cloud",
+          "shape": {
+            "Circle": {
+              "radius": 32000
+            }
+          },
+          "tick": 180,
+          "period": 30,
+          "first_delay": 0,
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "AddCasted",
+                "duration": 180,
+                "period": 30,
+                "casted_type": "Poison",
+                "effects": [
+                  {
+                    "type": "ApAttack",
+                    "damage": 8,
+                    "attack_ratio": 10
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "AddBuff",
+                "buff_state": {
+                  "name": "alchemist_skill1_heal_reduce",
+                  "duration": {
+                    "Time": {
+                      "tick": 60
+                    }
+                  },
+                  "heal_reduce": 50
+                }
+              },
+              "casting_type": "Targeting"
+            }
+          ],
+          "end_effects": []
+        }
+      ]
+    }
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "patch_type_name": "alchemist_skill2",
+    "description": "#asset/base/text/champion?description.alchemist.skill2",
+    "duration": 26,
+    "cooltime": 660,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 70000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "CasterViewEffect",
+          "name": "alchemist_skill2_caster"
+        },
+        {
+          "type": "TargetSfx",
+          "name": "alchemist_skill2_hit"
+        },
+        {
+          "type": "ViewEffect",
+          "name": "alchemist_skill2_target_back"
+        },
+        {
+          "type": "ViewEffect",
+          "name": "alchemist_skill2_target"
+        },
+        {
+          "type": "ApAttack",
+          "damage": 90,
+          "attack_ratio": 55
+        },
+        {
+          "type": "AddBuff",
+          "buff_state": {
+            "name": "alchemist_skill2_debuff",
+            "duration": {
+              "Time": {
+                "tick": 150
+              }
+            },
+            "heal_reduce": 100,
+            "move_speed_mult": -35
+          }
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "patch_type_name": "alchemist_ult",
+    "description": "#asset/base/text/champion?description.alchemist.ult",
+    "duration": 38,
+    "cooltime": 3000,
+    "start_timing": 18,
+    "cancelable": false,
+    "range": 92000,
+    "casting_type": "Position",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "LinearProjectile",
+      "penetrate": false,
+      "speed": 6500,
+      "range": 92000,
+      "name": "alchemist_ult_projectile",
+      "y_offset": 1500,
+      "shape": {
+        "Circle": {
+          "radius": 12000
+        }
+      },
+      "applied_target": "EnemyChampion",
+      "applied_effects": [
+        {
+          "effect": {
+            "type": "TargetSfx",
+            "name": "alchemist_ult_hit"
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "ShrinkingBarrier",
+            "name": "alchemist_ult_cloud",
+            "start_radius": 12000,
+            "end_radius": 50000,
+            "shrink_per_tick": 220,
+            "tick": 240,
+            "edge_thickness": 3000,
+            "anchor_on_target_lost": true,
+            "filled": true,
+            "applied_target": "EnemyWithoutTower",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "AddCasted",
+                  "duration": 240,
+                  "period": 30,
+                  "casted_type": "Poison",
+                  "effects": [
+                    {
+                      "type": "ApAttack",
+                      "damage": 20,
+                      "attack_ratio": 20
+                    }
+                  ]
+                },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": {
+                  "type": "AddStatScaledBuff",
+                  "buff_state": {
+                    "name": "alchemist_ult_corrosion",
+                    "duration": {
+                      "Time": {
+                        "tick": 180
+                      }
+                    },
+                    "defence": -8,
+                    "magic_resistance": -8
+                  },
+                  "scale": {
+                    "magic_power_to_defence": -5,
+                    "magic_power_to_magic_resistance": -5
+                  }
+                },
+                "casting_type": "Targeting"
+              }
+            ]
+          },
+          "casting_type": "Targeting"
+        }
+      ],
+      "end_effects": []
+    }
+  },
+  "view_effects": [],
+  "view_projectiles": [],
+  "view_buffs": []
+}

@@ -1,0 +1,448 @@
+{
+  "id": "nullifier",
+  "name": "Nullifier",
+  "category": "Assassin",
+  "tags": ["AD", "Melee", "CC"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/nullifier",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/nullifier_skill",
+    "asset/leefs_variety_all/icons/nullifier_skill2",
+    "asset/leefs_variety_all/icons/nullifier_ult"
+  ],
+  "stat": {
+    "attack": 120,
+    "magic_power": 0,
+    "hp": 900,
+    "defence": 25,
+    "magic_resistance": 15,
+    "move_speed": 1100,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 30,
+    "magic_power": 0,
+    "hp": 80,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 14,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+    "action_name": "attack",
+    "duration": 18,
+    "cooltime": 50,
+    "start_timing": 9,
+    "cancelable": true,
+    "range": 23000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "nullifier_enhanced_attack",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 170
+          },
+          {
+            "type": "Stun",
+            "duration": 30
+          },
+          {
+            "type": "Sfx",
+            "name": "nullifier_enhanced_attack"
+          },
+          {
+            "type": "ViewEffect",
+            "name": "nullifier_enhance_hit",
+            "duration": 30
+          },
+          {
+            "type": "RemoveCasterBuff",
+            "name": "nullifier_enhanced_attack"
+          }
+        ]
+      }
+    }
+  },
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "nullifier_ult_projectile",
+      "anim": "asset/leefs_variety_all/effects/nullifier_ult_projectile",
+      "tag": "nullifier_ult_projectile",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "nullifier_enhance_hit",
+      "anim": "asset/leefs_variety_all/effects/nullifier_enhance_hit",
+      "tag": "nullifier_enhance_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "nullifier_skill2_hit",
+      "anim": "asset/leefs_variety_all/effects/nullifier_skill2_hit",
+      "tag": "nullifier_skill2_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "nullifier_skill2_appear",
+      "anim": "asset/leefs_variety_all/effects/nullifier_skill2_appear",
+      "tag": "nullifier_skill2_appear",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "nullifier_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/nullifier_ult_hit",
+      "tag": "nullifier_ult_hit",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "nullifier_skill_buff",
+      "anim": "asset/leefs_variety_all/effects/nullifier_skill_buff",
+      "tag": "nullifier_skill_buff",
+      "z": -1,
+      "repeat": true
+    }
+  ],
+"skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.nullifier.skill",
+    "duration": 29,
+    "cooltime": 480,
+    "start_timing": 0,
+	"cancelable": false,
+    "range": 10000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "CasterAnimation",
+          "name": "skill_cast",
+          "tick": 9
+        },
+        {
+          "type": "Delayed",
+          "tick": 9,
+          "effects": [
+            {
+              "type": "CasterAnimation",
+              "name": "skill_dash",
+              "tick": 10
+            },
+            {
+              "type": "RushTime",
+              "speed": 3200,
+              "tick": 17,
+              "range": 0,
+              "casting_target": "EnemyWithoutTower",
+              "penetrate": true,
+              "applied_effects": []
+            }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 22,
+          "effects": [
+            {
+              "type": "AddCasterBuff",
+              "buff_state": {
+                "name": "nullifier_enhanced_attack",
+                "duration": {
+                  "Time": {
+                    "tick": 180
+                  }
+                },
+                "is_hidden": true
+              }
+            },
+            {
+              "type": "AddCasterBuff",
+              "buff_state": {
+                "name": "nullifier_skill_buff",
+                "duration": {
+                  "Time": {
+                    "tick": 180
+                  }
+                },
+                "magic_resistance": 200,
+                "move_speed_mult": 20,
+                "is_hidden": false
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.nullifier.skill2",
+    "duration": 49,
+    "cooltime": 120,
+    "start_timing": 0,
+    "range": 120000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampionInCC",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "nullifier_skill_buff",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "nullifier_skill2_appear"
+          },
+          {
+            "type": "ViewEffect",
+            "name": "nullifier_skill2_appear",
+            "duration": 30
+          },
+          {
+            "type": "Teleport"
+          },
+          {
+            "type": "Delayed",
+            "tick": 2,
+            "effects": [
+              {
+                "type": "MoveBack",
+                "speed": 2200,
+                "tick": 6
+              }
+            ]
+          },
+          {
+            "type": "Delayed",
+            "tick": 19,
+            "effects": [
+              {
+                "type": "Attack",
+                "damage": 60,
+                "attack_ratio": 90
+              },
+              {
+                "type": "Sfx",
+                "name": "nullifier_skill2_hit"
+              },
+              {
+                "type": "ViewEffect",
+                "name": "nullifier_skill2_hit",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "nullifier_skill2_appear"
+          },
+          {
+            "type": "ViewEffect",
+            "name": "nullifier_skill2_appear",
+            "duration": 30
+          },
+          {
+            "type": "Teleport"
+          },
+          {
+            "type": "Delayed",
+            "tick": 2,
+            "effects": [
+              {
+                "type": "MoveBack",
+                "speed": 2200,
+                "tick": 6
+              }
+            ]
+          },
+          {
+            "type": "Delayed",
+            "tick": 19,
+            "effects": [
+              {
+                "type": "Attack",
+                "damage": 90,
+                "attack_ratio": 120
+              },
+              {
+                "type": "BlockSkill",
+                "tick": 120
+              },
+              {
+                "type": "Sfx",
+                "name": "nullifier_skill2_hit"
+              },
+              {
+                "type": "ViewEffect",
+                "name": "nullifier_skill2_hit",
+                "duration": 30
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.nullifier.ult",
+  "duration": 56,
+  "cooltime": 3600,
+  "start_timing": 0,
+  "range": 88000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Sfx",
+        "name": "nullifier_ult_cast"
+      },
+      {
+        "type": "Delayed",
+        "tick": 21,
+        "effects": [
+          {
+            "type": "Sfx",
+            "name": "nullifier_ult_throw"
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 28,
+        "effects": [
+          {
+            "type": "TargetProjectile",
+            "name": "nullifier_ult_projectile",
+            "speed": 5100,
+            "applied_target": "EnemyChampion",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Combine",
+                  "effects": [
+                    {
+                      "type": "Attack",
+                      "damage": 50,
+                      "attack_ratio": 60
+                    },
+                    {
+                      "type": "Stun",
+                      "duration": 18
+                    },
+                    {
+                      "type": "Sfx",
+                      "name": "nullifier_ult_hit"
+                    },
+                    {
+                      "type": "ViewEffect",
+                      "name": "nullifier_ult_hit",
+                      "duration": 30
+                    },
+                    {
+                      "type": "Delayed",
+                      "tick": 120,
+                      "effects": [
+                        {
+                          "type": "Attack",
+                          "damage": 50,
+                          "attack_ratio": 60
+                        },
+                        {
+                          "type": "Stun",
+                          "duration": 18
+                        },
+                        {
+                          "type": "Sfx",
+                          "name": "nullifier_ult_hit"
+                        },
+                        {
+                          "type": "ViewEffect",
+                          "name": "nullifier_ult_hit",
+                          "duration": 30
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Delayed",
+                      "tick": 240,
+                      "effects": [
+                        {
+                          "type": "Attack",
+                          "damage": 50,
+                          "attack_ratio": 60
+                        },
+                        {
+                          "type": "Stun",
+                          "duration": 18
+                        },
+                        {
+                          "type": "Sfx",
+                          "name": "nullifier_ult_hit"
+                        },
+                        {
+                          "type": "ViewEffect",
+                          "name": "nullifier_ult_hit",
+                          "duration": 30
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+}

@@ -1,0 +1,248 @@
+{
+  "id": "oni",
+  "name": "Oni",
+  "category": "Util",
+  "tags": ["AP", "Heal"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/oni",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/oni_skill",
+    "asset/leefs_variety_all/icons/oni_skill2",
+    "asset/leefs_variety_all/icons/oni_ult"
+  ],
+  "stat": {
+    "attack": 80,
+    "magic_power": 55,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 18,
+    "hp": 100,
+    "defence": 8,
+    "magic_resistance": 4,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5000,
+      "name": "oni_attack",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+
+  "skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.oni.skill",
+    "duration": 24,
+    "cooltime": 360,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 45000,
+    "casting_type": "Targeting",
+    "casting_target": "AllyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {"type": "Sfx", "name": "oni_skill_cast"},
+        {"type": "ViewEffect", "name": "oni_heal"},
+        {"type": "Heal", "amount": 70, "ap_ratio": 70, "heal_type": "Any"},
+        {
+          "type": "AddBuff",
+          "buff_state": {
+            "name": "oni_range_buff",
+            "duration": {"Time": {"tick": 180}},
+            "range": 20000
+          }
+        }
+      ]
+    }
+  },
+
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.oni.skill2",
+    "duration": 24,
+    "cooltime": 370,
+    "start_timing": 12,
+    "cancelable": false,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "oni_skill2_cast" },
+        { "type": "ViewEffect", "name": "oni_skill2_vfx" },
+        {
+          "type": "Delayed",
+          "tick": 10,
+          "effects": [
+            { "type": "TargetSfx", "name": "oni_skill2_hit" }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 32,
+          "effects": [
+            { "type": "ApAttack", "damage": 80, "attack_ratio": 80 },
+            { "type": "BlockAttack", "tick": 180 }
+          ]
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.oni.ult",
+    "duration": 30,
+    "cooltime": 3000,
+    "start_timing": 15,
+    "cancelable": false,
+    "range": 0,
+    "casting_type": "None",
+    "casting_target": "AllyOnlySelf",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {"type": "Sfx", "name": "oni_ult_cast"},
+        {"type": "CasterViewEffect", "name": "oni_ultmask"},
+        {"type": "AddCasterBuff", "buff_state": {
+          "name": "oni_ult_aura",
+          "duration": {"Time": {"tick": 900}}
+        }},
+
+        {"type": "Sfx", "name": "oni_ult_pulse"},
+        {"type": "CasterViewEffect", "name": "oni_ult_vfx"},
+        {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+         "target": "EnemyChampion", "apply_type": "AroundCaster",
+         "effects": [{"type": "ApAttack", "damage": 60, "attack_ratio": 50}]},
+        {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+         "target": "AllyChampion", "apply_type": "AroundCaster",
+         "effects": [{"type": "Heal", "amount": 50, "ap_ratio": 40, "heal_type": "Any"}]},
+
+        {"type": "Delayed", "tick": 180, "effects": [
+          {"type": "Sfx", "name": "oni_ult_pulse"},
+          {"type": "CasterViewEffect", "name": "oni_ult_vfx"},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "EnemyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "ApAttack", "damage": 60, "attack_ratio": 50}]},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "AllyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "Heal", "amount": 50, "ap_ratio": 40, "heal_type": "Any"}]}
+        ]},
+
+        {"type": "Delayed", "tick": 360, "effects": [
+          {"type": "Sfx", "name": "oni_ult_pulse"},
+          {"type": "CasterViewEffect", "name": "oni_ult_vfx"},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "EnemyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "ApAttack", "damage": 60, "attack_ratio": 50}]},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "AllyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "Heal", "amount": 50, "ap_ratio": 40, "heal_type": "Any"}]}
+        ]},
+
+        {"type": "Delayed", "tick": 540, "effects": [
+          {"type": "Sfx", "name": "oni_ult_pulse"},
+          {"type": "CasterViewEffect", "name": "oni_ult_vfx"},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "EnemyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "ApAttack", "damage": 60, "attack_ratio": 50}]},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "AllyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "Heal", "amount": 50, "ap_ratio": 40, "heal_type": "Any"}]}
+        ]},
+
+        {"type": "Delayed", "tick": 720, "effects": [
+          {"type": "Sfx", "name": "oni_ult_pulse"},
+          {"type": "CasterViewEffect", "name": "oni_ult_vfx"},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "Enemy", "apply_type": "AroundCaster",
+           "effects": [{"type": "ApAttack", "damage": 60, "attack_ratio": 50}]},
+          {"type": "RangeEffect", "shape": {"Circle": {"radius": 72000}},
+           "target": "AllyChampion", "apply_type": "AroundCaster",
+           "effects": [{"type": "Heal", "amount": 50, "ap_ratio": 40, "heal_type": "Any"}]}
+        ]}
+      ]
+    }
+  },
+
+  "view_projectiles": [
+    {"type": "Animated", "name": "oni_attack", "anim": "asset/leefs_variety_all/effects/oni_projectile", "tag": "oni_projectile", "z": 0, "repeat": true}
+  ],
+
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "oni_heal",
+      "anim": "asset/leefs_variety_all/effects/oni_heal",
+      "tag": "oni_heal",
+      "z": 1,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "oni_skill2_vfx",
+      "anim": "asset/leefs_variety_all/effects/oni_skill2_vfx",
+      "tag": "oni_skill2_vfx",
+      "z": 1,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "oni_ult_vfx",
+      "anim": "asset/leefs_variety_all/effects/oni_ult",
+      "tag": "oni_ult",
+      "z": -1,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "oni_ultmask",
+      "anim": "asset/leefs_variety_all/effects/oni_ultmask",
+      "tag": "oni_ultmask",
+      "z": 1,
+      "is_follow": true
+    }
+  ],
+
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "oni_ult_aura",
+      "anim": "asset/leefs_variety_all/buffs/oni_buff",
+      "tag": "oni_buff",
+      "z": -1
+    }
+  ]
+}

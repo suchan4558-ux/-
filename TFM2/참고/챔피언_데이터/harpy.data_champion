@@ -1,0 +1,297 @@
+{
+  "id": "harpy",
+  "name": "Harpy",
+  "category": "Range",
+  "tags": ["AD", "Range", "CC"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/harpy",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/harpy_skill",
+    "asset/leefs_variety_all/icons/harpy_skill2",
+    "asset/leefs_variety_all/icons/harpy_ult"
+  ],
+  "stat": {
+    "attack": 100,
+    "magic_power": 0,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 15,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 15,
+    "magic_power": 0,
+    "hp": 90,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+  "action_name": "attack",
+  "duration": 24,
+  "cooltime": 60,
+  "start_timing": 12,
+  "cancelable": true,
+  "range": 70000,
+  "casting_type": "Targeting",
+  "casting_target": "Enemy",
+  "attack_type": "BaseAttack",
+  "effect": {
+    "type": "SwitchByBuff",
+    "buff_name": "harpy_skill_buff",
+    "effect_none": {
+      "type": "TargetProjectile",
+      "speed": 5200,
+      "name": "harpy_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": { "type": "Attack", "damage": 0, "attack_ratio": 100 },
+          "casting_type": "Targeting"
+        }
+      ]
+    },
+    "effect_buff": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "TargetProjectile",
+          "speed": 5200,
+          "name": "harpy_projectile",
+          "applied_target": "Enemy",
+          "applied_effects": [
+            {
+              "effect": { "type": "Attack", "damage": 0, "attack_ratio": 100 },
+              "casting_type": "Targeting"
+            }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 1,
+          "effects": [
+            { "type": "Sfx", "name": "harpy_attack2" }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 3,
+          "effects": [
+            {
+              "type": "WithSelf",
+              "effects": [
+                {
+                  "type": "RandomTarget",
+                  "range": 72000,
+                  "casting_target": "EnemyWithoutTower",
+                  "effects": [
+                    {
+                      "type": "TargetProjectile",
+                      "speed": 5200,
+                      "name": "harpy_projectile2",
+                      "applied_target": "Enemy",
+                      "applied_effects": [
+                        {
+                          "effect": { "type": "Attack", "damage": 0, "attack_ratio": 75 },
+                          "casting_type": "Targeting"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+},
+  
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "harpy_projectile",
+      "anim": "asset/leefs_variety_all/effects/harpy_projectile",
+      "tag": "harpy_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "harpy_projectile2",
+      "anim": "asset/leefs_variety_all/effects/harpy_projectile2",
+      "tag": "harpy_projectile2",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "harpy_skill2_hit",
+      "anim": "asset/leefs_variety_all/effects/harpy_skill2_hit",
+      "tag": "harpy_skill2_hit",
+      "z": 0,
+      "is_follow": false
+    },
+	{
+      "type": "Animation",
+      "name": "harpy_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/harpy_ult_hit",
+      "tag": "harpy_ult_hit",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "harpy_skill_buff",
+      "anim": "asset/leefs_variety_all/effects/harpy_skill_buff",
+      "tag": "harpy_skill_buff",
+      "z": 1,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "harpy_ult_buff",
+      "anim": "asset/leefs_variety_all/effects/harpy_ult_buff",
+      "tag": "harpy_ult_buff",
+      "z": 1,
+      "repeat": true
+    }
+  ],
+"skill": {
+  "action_name": "skill",
+  "description": "#asset/base/text/champion?description.harpy.skill",
+  "duration": 28,
+  "cooltime": 390,
+  "start_timing": 0,
+  "range": 70000,
+  "casting_type": "Targeting",
+  "casting_target": "Enemy",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "harpy_skill_cast" },
+      {
+        "type": "Delayed",
+        "tick": 20,
+        "effects": [
+          {
+            "type": "AddCasterBuff",
+            "buff_state": {
+              "name": "harpy_skill_buff",
+              "duration": { "Time": { "tick": 180 } },
+			  "attack_speed_mult": 20
+            }
+          }
+        ]
+      }
+    ]
+  }
+},
+"skill2": {
+  "action_name": "skill2",
+  "description": "#asset/base/text/champion?description.harpy.skill2",
+  "duration": 45,
+  "cooltime": 360,
+  "start_timing": 0,
+  "range": 40000,
+  "casting_type": "Targeting",
+  "casting_target": "Enemy",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "harpy_skill2_cast" },
+      {
+        "type": "Delayed",
+        "tick": 21,
+        "effects": [
+          { "type": "Sfx", "name": "harpy_skill2_screech" },
+          {
+            "type": "RangeEffect",
+            "shape": { "Circle": { "radius": 44000 } },
+            "target": "Enemy",
+            "apply_type": "AroundCaster",
+            "effects": [
+              { "type": "Attack", "damage": 60, "attack_ratio": 70 },
+              { "type": "TargetSfx", "name": "harpy_skill2_hit" },
+              { "type": "ViewEffect", "name": "harpy_skill2_hit", "duration": 30 },
+              { "type": "Fear", "tick": 60 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.harpy.ult",
+  "duration": 70,
+  "cooltime": 3300,
+  "start_timing": 0,
+  "range": 150000,
+  "casting_type": "Direction",
+  "casting_target": "EnemyWithoutTower",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      { "type": "Sfx", "name": "harpy_ult_cast" },
+      { "type": "Sfx", "name": "harpy_ult_flight" },
+      {
+        "type": "RushTime",
+        "speed": 2500,
+        "tick": 70,
+        "range": 10000,
+        "casting_target": "EnemyChampion",
+        "penetrate": true,
+        "applied_effects": [
+          {
+            "effect": { "type": "Attack", "damage": 50, "attack_ratio": 100 },
+            "casting_type": "Targeting"
+          },
+          {
+            "effect": { "type": "Airborne", "duration": 45 },
+            "casting_type": "Targeting"
+          },
+          {
+            "effect": { "type": "Sfx", "name": "harpy_ult_hit" },
+            "casting_type": "Targeting"
+          },
+          {
+            "effect": { "type": "ViewEffect", "name": "harpy_ult_hit", "duration": 30 },
+            "casting_type": "Targeting"
+          }
+        ]
+      },
+      {
+        "type": "Delayed",
+        "tick": 72,
+        "effects": [
+          {
+            "type": "AddCasterBuff",
+            "buff_state": {
+              "name": "harpy_ult_buff",
+              "duration": { "Time": { "tick": 480 } },
+              "ignore_wall": true,
+              "move_speed_mult": 20
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+}

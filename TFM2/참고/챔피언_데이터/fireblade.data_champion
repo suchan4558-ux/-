@@ -1,0 +1,362 @@
+{
+  "id": "fireblade",
+  "category": "Melee",
+  "tags": [
+    "AD",
+    "Melee",
+    "Dot"
+  ],
+  "sprite": "asset/cf_space_viking/champions/fireblade",
+  "anim_prefix": "",
+  "stat": {
+    "attack": 85,
+    "crit_chance": 0,
+    "defence": 20,
+    "hp": 950,
+    "hp_regen": 0,
+    "magic_power": 0,
+    "magic_resistance": 15,
+    "move_speed": 1100,
+    "stack": 0
+  },
+  "skill_icons": [
+    "asset/cf_space_viking/icons/fireblade_skill",
+    "asset/cf_space_viking/icons/fireblade_skill2",
+    "asset/cf_space_viking/icons/fireblade_ult"
+  ],
+  "growth": {
+    "attack": 12,
+    "crit_chance": 0,
+    "defence": 5,
+    "hp": 80,
+    "hp_regen": 0,
+    "magic_power": 0,
+    "magic_resistance": 5,
+    "move_speed": 10,
+    "stack": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "attack_type": "BaseAttack",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "Enemy",
+    "casting_type": "Targeting",
+    "cooltime": 60,
+    "description": "#asset/base/text/champion?description.fireblade.attack",
+    "duration": 20,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "SwitchByBuff",
+          "buff_name": "Ignited Blade",
+          "effect_none": {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100,
+            "ap_ratio": 0,
+            "hp_ratio": 0,
+            "target_hp_ratio": 0,
+            "attack_effect_type": "Target"
+          },
+          "effect_buff": {
+            "type": "LinearProjectile",
+            "penetrate": true,
+            "speed": 4000,
+            "range": 46000,
+            "name": "fire_blade_cleave",
+            "y_offset": 0,
+            "shape": {
+              "Circle": {
+                "radius": 10000
+              }
+            },
+            "applied_target": "Enemy",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Attack",
+                  "damage": 30,
+                  "attack_ratio": 120,
+                  "ap_ratio": 0,
+                  "hp_ratio": 0,
+                  "target_hp_ratio": 1,
+                  "attack_effect_type": "Target"
+                },
+                "casting_type": "Targeting"
+              }
+            ],
+            "end_effects": []
+          }
+        },
+        {
+          "type": "SwitchByBuff",
+          "buff_name": "Fire_From_Hell",
+          "effect_none": {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100,
+            "ap_ratio": 0,
+            "hp_ratio": 0,
+            "target_hp_ratio": 0,
+            "attack_effect_type": "Target"
+          },
+          "effect_buff": {
+            "type": "LinearProjectile",
+            "penetrate": true,
+            "speed": 4000,
+            "range": 65000,
+            "name": "fire_blade_cleave",
+            "y_offset": 0,
+            "shape": {
+              "Circle": {
+                "radius": 10000
+              }
+            },
+            "applied_target": "Enemy",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Attack",
+                  "damage": 30,
+                  "attack_ratio": 120,
+                  "ap_ratio": 0,
+                  "hp_ratio": 0,
+                  "target_hp_ratio": 0,
+                  "attack_effect_type": "Target"
+                },
+                "casting_type": "Targeting"
+              }
+            ],
+            "end_effects": []
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "pyromancer_ult"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 18000,
+    "start_timing": 0
+  },
+  "skill": {
+    "action_name": "skill",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "EnemyWithoutTower",
+    "casting_type": "Targeting",
+    "cooltime": 480,
+    "description": "#asset/base/text/champion?description.fireblade.skill",
+    "duration": 20,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "SwitchByBuff",
+          "buff_name": "Fire_From_Hell",
+          "effect_none": {
+            "type": "Combine",
+            "effects": [
+              {
+                "type": "AddCasterBuff",
+                "only_to_enemy": false,
+                "buff_state": {
+                  "name": "Ignited Blade",
+                  "duration": {
+                    "Time": {
+                      "tick": 300
+                    }
+                  },
+                  "attack_mult": 10,
+                  "range": 15000
+                }
+              }
+            ]
+          },
+          "effect_buff": {
+            "type": "LinearProjectile",
+            "penetrate": true,
+            "speed": 4200,
+            "range": 125000,
+            "name": "fire_blade_cleave2",
+            "y_offset": 0,
+            "shape": {
+              "Circle": {
+                "radius": 20000
+              }
+            },
+            "applied_target": "Enemy",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Attack",
+                  "damage": 90,
+                  "attack_ratio": 70,
+                  "ap_ratio": 0,
+                  "hp_ratio": 0,
+                  "target_hp_ratio": 0,
+                  "attack_effect_type": "Target"
+                },
+                "casting_type": "Targeting"
+              }
+            ],
+            "end_effects": [
+              {
+                "type": "CasterAnimation",
+                "name": "attack",
+                "tick": 10
+              },
+              {
+                "type": "Sfx",
+                "name": "pyromancer_attack"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 28000,
+    "start_timing": 0
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "EnemyChampion",
+    "casting_type": "Targeting",
+    "cooltime": 540,
+    "description": "#asset/base/text/champion?description.fireblade.skill2",
+    "duration": 20,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "Attack",
+          "damage": 50,
+          "attack_ratio": 70,
+          "ap_ratio": 0,
+          "hp_ratio": 0,
+          "target_hp_ratio": 0,
+          "attack_effect_type": "Target"
+        },
+        {
+          "type": "AddCasted",
+          "duration": 120,
+          "period": 30,
+          "casted_type": "Fire",
+          "effects": [
+            {
+              "type": "Attack",
+              "damage": 0,
+              "attack_ratio": 10,
+              "ap_ratio": 0,
+              "hp_ratio": 0,
+              "target_hp_ratio": 1,
+              "attack_effect_type": "Target"
+            }
+          ]
+        },
+        {
+          "type": "AddBuff",
+          "buff_state": {
+            "name": "Hellfire",
+            "duration": {
+              "Time": {
+                "tick": 120
+              }
+            },
+            "move_speed_mult": -30
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "vampire_ult"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 26000,
+    "start_timing": 6
+  },
+  "ult": {
+    "action_name": "ult",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "AllyOnlySelf",
+    "casting_type": "None",
+    "cooltime": 4000,
+    "description": "#asset/base/text/champion?description.fireblade.ult",
+    "duration": 30,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "AddCasterBuff",
+          "only_to_enemy": false,
+          "buff_state": {
+            "name": "Fire_From_Hell",
+            "duration": {
+              "Time": {
+                "tick": 720
+              }
+            },
+            "attack_mult": 20,
+            "hp": 400,
+            "range": 30000,
+            "cc_immune": true
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "pyromancer_skill"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 18000,
+    "start_timing": 30
+  },
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "fire_blade_cleave",
+      "anim": "asset/cf_space_viking/fireblade/swordflame/swordflameskill",
+      "tag": "skill",
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "fire_blade_cleave2",
+      "anim": "asset/cf_space_viking/fireblade/swordflame/swordflameskillv2",
+      "tag": "skillv2",
+      "repeat": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "Fire_From_Hell",
+      "anim": "asset/cf_space_viking/fireblade/swordflame/swordflamefirewingbuff",
+      "tag": "fire",
+      "z": -1
+    },
+    {
+      "type": "Animated",
+      "name": "Hellfire",
+      "anim": "asset/cf_space_viking/fireblade/swordflame/swordflameskill2",
+      "tag": "skill2",
+      "z": 1
+    }
+  ],
+  "passive": {
+    "passive_ref": "cf_space_viking:forge_runtime_fireblade",
+    "params": {}
+  }
+}

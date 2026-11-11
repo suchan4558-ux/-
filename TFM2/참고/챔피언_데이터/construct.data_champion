@@ -1,0 +1,254 @@
+{
+  "id": "construct",
+  "category": "Melee",
+  "tags": ["Shield", "Melee", "Tank"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/construct",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/construct_skill",
+    "asset/leefs_variety_all/icons/construct_skill2",
+    "asset/leefs_variety_all/icons/construct_ult"
+  ],
+  "stat": {
+    "attack": 80,
+    "magic_power": 10,
+    "hp": 1100,
+    "defence": 40,
+    "magic_resistance": 30,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 5,
+    "hp": 120,
+    "defence": 10,
+    "magic_resistance": 5,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 70,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 25000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {"type": "Attack", "damage": 0, "attack_ratio": 100}
+      ]
+    }
+  },
+"view_projectiles": [
+  {
+    "type": "Animated",
+    "name": "construct_ult_projectile",
+    "anim": "asset/leefs_variety_all/effects/construct_ult_projectile",
+    "tag": "construct_ult_projectile",
+    "z": 0,
+    "repeat": true
+  }
+],
+
+"view_effects": [
+  {
+    "type": "Animation",
+    "name": "construct_skill_hit",
+    "anim": "asset/leefs_variety_all/effects/construct_skill_hit",
+    "tag": "construct_skill_hit",
+    "z": 0,
+    "is_follow": false
+  },
+  {
+    "type": "Animation",
+    "name": "construct_ult_hit",
+    "anim": "asset/leefs_variety_all/effects/construct_ult_hit",
+    "tag": "construct_ult_hit",
+    "z": 0,
+    "is_follow": false
+  }
+],
+
+"view_buffs": [
+  {
+    "type": "Animated",
+    "name": "construct_skill2_shield",
+    "anim": "asset/leefs_variety_all/effects/construct_skill2_shield",
+    "tag": "construct_skill2_shield",
+    "z": 1,
+    "repeat": true
+  },
+  {
+    "type": "Animated",
+    "name": "construct_ult_debuff",
+    "anim": "asset/leefs_variety_all/effects/construct_ult_debuff",
+    "tag": "construct_ult_debuff",
+    "z": 1,
+    "repeat": true
+  }
+],
+"skill": {
+  "action_name": "skill",
+  "description": "#asset/base/text/champion?description.construct.skill",
+  "duration": 24,
+  "cooltime": 150,
+  "start_timing": 0,
+  "range": 36000,
+  "casting_type": "Targeting",
+  "casting_target": "Enemy",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Delayed",
+        "tick": 11,
+        "effects": [
+          { "type": "Sfx", "name": "construct_skill_cast" },
+          {
+            "type": "RangeEffect",
+            "shape": { "Circle": { "radius": 41000 } },
+            "target": "EnemyWithoutTower",
+            "apply_type": "AroundCaster",
+            "effects": [
+              { "type": "TargetSfx", "name": "construct_skill_hit" },
+              { "type": "ViewEffect", "name": "construct_skill_hit", "duration": 30 },
+              { "type": "ApAttack", "damage": 25, "attack_ratio": 25, "hp_ratio": 5 },
+              { "type": "Pull", "speed": 1900, "tick": 10 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"skill2": {
+  "action_name": "skill2",
+  "description": "#asset/base/text/champion?description.construct.skill2",
+  "duration": 42,
+  "cooltime": 480,
+  "start_timing": 0,
+  "range": 40000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "Delayed",
+        "tick": 19,
+        "effects": [
+          { "type": "Sfx", "name": "construct_skill2_cast" },
+          {
+            "type": "RangeEffect",
+            "shape": { "Circle": { "radius": 60000 } },
+            "target": "AllyChampion",
+            "apply_type": "AroundCaster",
+            "effects": [
+              {
+                "type": "Shield",
+                "amount": 300,
+                "attack_ratio": 0,
+                "ap_ratio": 50,
+                "hp_ratio": 5,
+                "tick": 210
+              },
+              {
+                "type": "AddBuff",
+                "buff_state": {
+                  "name": "construct_skill2_shield",
+                  "duration": { "Time": { "tick": 210 } }
+                }
+              }
+            ]
+          },
+          {
+            "type": "RangeEffect",
+            "shape": { "Circle": { "radius": 45000 } },
+            "target": "EnemyWithoutTower",
+            "apply_type": "AroundCaster",
+            "effects": [
+              { "type": "Pull", "speed": 2000, "tick": 14 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+},
+"ult": {
+  "action_name": "ult",
+  "description": "#asset/base/text/champion?description.construct.ult",
+  "duration": 60,
+  "cooltime": 3300,
+  "start_timing": 0,
+  "range": 70000,
+  "casting_type": "Targeting",
+  "casting_target": "EnemyChampion",
+  "attack_type": "Skill",
+  "effect": {
+    "type": "Combine",
+    "effects": [
+      {
+        "type": "AddCasterBuff",
+        "buff_state": {
+          "name": "construct_ult_stack_buff",
+          "duration": "Permanent",
+          "hp": 100,
+          "is_hidden": true,
+          "can_stack": true
+        }
+      },
+      { "type": "Sfx", "name": "construct_ult_cast" },
+      {
+        "type": "Delayed",
+        "tick": 37,
+        "effects": [
+          { "type": "Sfx", "name": "construct_ult_blast" },
+          {
+            "type": "TargetProjectile",
+            "speed": 4000,
+            "name": "construct_ult_projectile",
+            "applied_target": "EnemyChampion",
+            "applied_effects": [
+              {
+                "effect": { "type": "ApAttack", "damage": 100, "attack_ratio": 50, "hp_ratio": 10 },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": {
+                  "type": "AddBuff",
+                  "buff_state": {
+                    "name": "construct_ult_debuff",
+                    "duration": { "Time": { "tick": 300 } },
+                    "hp_mult": -25
+                  }
+                },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "TargetSfx", "name": "construct_ult_hit" },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "ViewEffect", "name": "construct_ult_hit", "duration": 30 },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+}

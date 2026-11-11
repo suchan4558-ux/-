@@ -1,0 +1,309 @@
+{
+  "id": "amazon",
+  "category": "Melee",
+  "tags": ["AD", "CC"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/amazon",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/amazon_skill",
+    "asset/leefs_variety_all/icons/amazon_skill2",
+    "asset/leefs_variety_all/icons/amazon_ult"
+  ],
+  "stat": {
+    "attack": 100,
+    "magic_power": 0,
+    "hp": 1000,
+    "defence": 30,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 20,
+    "magic_power": 0,
+    "hp": 100,
+    "defence": 7,
+    "magic_resistance": 4,
+    "move_speed": 12,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 70,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 30000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {"type": "Attack", "damage": 0, "attack_ratio": 100}
+      ]
+    }
+  },
+"view_effects": [
+    {
+      "type": "Animation",
+      "name": "amazon_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/amazon_skill_hit",
+      "tag": "amazon_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "amazon_skill_enhanced_hit",
+      "anim": "asset/leefs_variety_all/effects/amazon_skill_enhanced_hit",
+      "tag": "amazon_skill_enhanced_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "amazon_skill2_cast",
+      "anim": "asset/leefs_variety_all/effects/amazon_skill2_cast",
+      "tag": "amazon_skill2_cast",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "amazon_enhance",
+      "anim": "asset/leefs_variety_all/effects/amazon_enhance",
+      "tag": "amazon_enhance",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "amazon_ult_buff_end",
+      "anim": "asset/leefs_variety_all/effects/amazon_ult_buff_end",
+      "tag": "amazon_ult_buff_end",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "amazon_ult_buff",
+      "anim": "asset/leefs_variety_all/effects/amazon_ult_buff",
+      "tag": "amazon_ult_buff",
+      "z": 1,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "amazon_enhance",
+      "anim": "asset/leefs_variety_all/effects/amazon_enhance",
+      "tag": "amazon_enhance",
+      "z": -1,
+      "repeat": true
+    }
+  ],
+"skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.amazon.skill",
+    "duration": 21,
+    "cooltime": 210,
+    "start_timing": 0,
+    "range": 30000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "amazon_enhance",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "amazon_skill_cast" },
+          {
+            "type": "Delayed",
+            "tick": 8,
+            "effects": [
+              { "type": "Attack", "damage": 100, "attack_ratio": 100 },
+              { "type": "Sfx", "name": "amazon_skill_hit" },
+              { "type": "ViewEffect", "name": "amazon_skill_hit", "duration": 20 },
+              {
+                "type": "WithSelf",
+                "effects": [
+                  {
+                    "type": "AddBuff",
+                    "buff_state": {
+                      "name": "amazon_speed_stack",
+                      "duration": { "Time": { "tick": 480 } },
+                      "attack_speed_mult": 25,
+                      "max_stack": 3,
+                      "independent": false
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "CasterAnimation", "name": "skill_enhanced", "tick": 21 },
+          { "type": "Sfx", "name": "amazon_skill_cast" },
+          {
+            "type": "RemoveCasterBuff",
+            "name": "amazon_enhance"
+          },
+          {
+            "type": "Delayed",
+            "tick": 8,
+            "effects": [
+              { "type": "Attack", "damage": 100, "attack_ratio": 210 },
+              { "type": "Sfx", "name": "amazon_skill_enhanced_hit" },
+              { "type": "ViewEffect", "name": "amazon_skill_enhanced_hit", "duration": 20 },
+              {
+                "type": "WithSelf",
+                "effects": [
+                  {
+                    "type": "AddBuff",
+                    "buff_state": {
+                      "name": "amazon_speed_stack",
+                      "duration": { "Time": { "tick": 480 } },
+                      "attack_speed_mult": 25,
+                      "max_stack": 3,
+                      "independent": false
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.amazon.skill2",
+    "duration": 40,
+    "cooltime": 480,
+    "start_timing": 5,
+    "range": 72000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "amazon_skill2_cast" },
+        {
+          "type": "Delayed",
+          "tick": 6,
+          "effects": [
+            { "type": "CasterViewEffect", "name": "amazon_skill2_cast", "duration": 24 },
+            {
+              "type": "MoveToTarget",
+              "speed": 6000,
+              "range": 90000,
+              "end_effects": [
+                {
+                  "type": "Delayed",
+                  "tick": 1,
+                  "effects": [
+                    { "type": "Sfx", "name": "amazon_skill2_hit" },
+                    { "type": "ViewEffect", "name": "amazon_skill2_cast", "duration": 24 },
+                    { "type": "Attack", "damage": 80, "attack_ratio": 90 },
+                    {
+                      "type": "AddCasterBuff",
+                      "buff_state": {
+                        "name": "amazon_enhance",
+                        "duration": { "Time": { "tick": 180 } }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+"ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.amazon.ult",
+    "duration": 65,
+    "cooltime": 3000,
+    "start_timing": 0,
+    "cancelable": false,
+    "range": 35000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "amazon_ult_cast" },
+        {
+          "type": "AddCasterBuff",
+          "buff_state": {
+            "name": "amazon_ult_invul",
+            "duration": { "Time": { "tick": 65 } },
+            "defence": 500,
+            "magic_resistance": 500,
+            "cc_immune": true
+          }
+        },
+        {
+          "type": "Delayed",
+          "tick": 10,
+          "effects": [
+            {
+              "type": "RangeEffect",
+              "shape": { "Circle": { "radius": 43000 } },
+              "target": "EnemyWithoutTower",
+              "apply_type": "AroundCaster",
+              "effects": [
+                { "type": "Pull", "speed": 3000, "tick": 16 }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 47,
+          "effects": [
+            { "type": "Sfx", "name": "amazon_ult_burst" },
+            {
+              "type": "RangeEffect",
+              "shape": { "Circle": { "radius": 40000 } },
+              "target": "Enemy",
+              "apply_type": "AroundCaster",
+              "effects": [
+                { "type": "Sfx", "name": "amazon_ult_hit" },
+                { "type": "Stun", "duration": 60 },
+                {
+                  "type": "AddCasterBuff",
+                  "buff_state": {
+                    "name": "amazon_ult_buff",
+                    "duration": { "Time": { "tick": 240 } },
+                    "defence": 30,
+                    "magic_resistance": 30,
+                    "max_stack": 5,
+                    "independent": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "id": "crossbowman",
+  "category": "Range",
+  "tags": [
+    "AD",
+    "Range"
+  ],
+  "sprite": "asset/base/aseprite_resources/champions/crossbowman",
+  "stat": {
+    "attack": 100,
+    "magic_power": 0,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 15,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 15,
+    "magic_power": 0,
+    "hp": 90,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "patch_type_name": "crossbowman_attack",
+    "duration": 24,
+    "cooltime": 102,
+    "start_timing": 20,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5200,
+      "y_offset": 1200,
+      "name": "crossbowman_attack",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {
+            "type": "TargetSfx",
+            "name": "crossbowman_attack_hit"
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "Attack",
+            "damage": 0,
+            "attack_ratio": 100
+          },
+          "casting_type": "Targeting"
+        },
+        {
+          "effect": {
+            "type": "ViewEffect",
+            "name": "crossbowman_attack_hit"
+          },
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill1",
+    "patch_type_name": "crossbowman_skill1",
+    "description": "#asset/base/text/champion?description.crossbowman.skill",
+    "duration": 26,
+    "cooltime": 120,
+    "start_timing": 18,
+    "cancelable": false,
+    "range": 150000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "CasterViewEffect",
+          "name": "crossbowman_skill1_cast"
+        },
+        {
+          "type": "Native",
+          "effect_ref": "crossbowman_skill1",
+          "speed": 6000,
+          "range": 150000,
+          "y_offset": 1200,
+          "projectile_radius": 3000,
+          "attack_ratio": 200,
+          "mark_bonus_attack_ratio": 60
+        }
+      ]
+    }
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "patch_type_name": "crossbowman_skill2",
+    "description": "#asset/base/text/champion?description.crossbowman.skill2",
+    "duration": 26,
+    "cooltime": 270,
+    "start_timing": 14,
+    "cancelable": false,
+    "range": 150000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "CasterViewEffect",
+          "name": "crossbowman_skill2_cast"
+        },
+        {
+          "type": "Native",
+          "effect_ref": "crossbowman_skill2",
+          "speed": 6000,
+          "range": 150000,
+          "y_offset": 1200,
+          "projectile_radius": 6000,
+          "attack_ratio": 130,
+          "mark_bonus_attack_ratio": 50,
+          "backstep_speed": 3000,
+          "backstep_tick": 20
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "patch_type_name": "crossbowman_ult",
+    "description": "#asset/base/text/champion?description.crossbowman.ult",
+    "duration": 26,
+    "cooltime": 2400,
+    "start_timing": 20,
+    "cancelable": false,
+    "range": 150000,
+    "casting_type": "Direction",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "CasterViewEffect",
+          "name": "crossbowman_ult_cast"
+        },
+        {
+          "type": "Native",
+          "effect_ref": "crossbowman_ult",
+          "speed": 6000,
+          "range": 150000,
+          "y_offset": 1200,
+          "projectile_radius": 8000,
+          "attack_ratio": 80,
+          "buff_duration": 300,
+          "cooldown_reduce": 90
+        }
+      ]
+    }
+  }
+}

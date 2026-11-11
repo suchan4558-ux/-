@@ -1,0 +1,434 @@
+{
+  "id": "mistguide",
+  "name": "Mist Guide",
+  "category": "Util",
+  "tags": ["AP", "Shield", "CC"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/mistguide",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/mistguide_skill",
+    "asset/leefs_variety_all/icons/mistguide_skill2",
+    "asset/leefs_variety_all/icons/mistguide_ult"
+  ],
+  "stat": {
+    "attack": 80,
+    "magic_power": 30,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 15,
+    "hp": 100,
+    "defence": 8,
+    "magic_resistance": 4,
+    "move_speed": 10,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 5000,
+      "name": "mistguide_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  
+"view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "mistguide_projectile",
+      "anim": "asset/leefs_variety_all/effects/mistguide_projectile",
+      "tag": "mistguide_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "mistguide_skill_projectile1",
+      "anim": "asset/leefs_variety_all/effects/mistguide_skill_projectile1",
+      "tag": "mistguide_skill_projectile1",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "mistguide_skill_projectile2",
+      "anim": "asset/leefs_variety_all/effects/mistguide_skill_projectile2",
+      "tag": "mistguide_skill_projectile2",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "mistguide_skill2_area",
+      "anim": "asset/leefs_variety_all/effects/mistguide_skill2_area",
+      "tag": "mistguide_skill2_area",
+      "z": -1,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "mistguide_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/mistguide_skill_hit",
+      "tag": "mistguide_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "mistguide_skill2_apply",
+      "anim": "asset/leefs_variety_all/effects/mistguide_skill2_apply",
+      "tag": "mistguide_skill2_apply",
+      "z": 0,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "mistguide_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/mistguide_ult_hit",
+      "tag": "mistguide_ult_hit",
+      "z": 0,
+      "is_follow": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "mistguide_ult_buff",
+      "anim": "asset/leefs_variety_all/effects/mistguide_ult_buff",
+      "tag": "mistguide_ult_buff",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+"skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.mistguide.skill",
+    "duration": 0,
+    "cooltime": 180,
+    "start_timing": 0,
+    "range": 120000,
+    "casting_type": "Targeting",
+    "casting_target": "AllyChampion",
+    "attack_type": "Skill",
+    "can_use_with_move": true,
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "skill1_switch",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "mistguide_skill_cast1" },
+          {
+            "type": "AddCasterBuff",
+            "buff_state": {
+              "name": "skill1_switch",
+              "duration": { "Time": { "tick": 380 } },
+              "is_hidden": true
+            }
+          },
+          {
+            "type": "TargetProjectile",
+            "speed": 3000,
+            "name": "mistguide_skill_projectile1",
+            "applied_target": "Ally",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Shield",
+                  "amount": 50,
+                  "ap_ratio": 55,
+                  "tick": 180
+                },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": {
+                  "type": "AddBuff",
+                  "buff_state": {
+                    "name": "mistguide_speed_buff",
+                    "duration": { "Time": { "tick": 180 } },
+                    "move_speed_mult": 20
+                  }
+                },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "TargetSfx", "name": "mistguide_skill_hit1" },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": { "type": "ViewEffect", "name": "mistguide_skill_hit", "duration": 20 },
+                "casting_type": "Targeting"
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "WithSelf",
+        "effects": [
+          {
+            "type": "RandomTarget",
+            "count": 1,
+            "range": 120000,
+            "casting_target": "EnemyChampion",
+            "effects": [
+              { "type": "Sfx", "name": "mistguide_skill_cast2" },
+              {
+                "type": "TargetProjectile",
+                "speed": 3000,
+                "name": "mistguide_skill_projectile2",
+                "applied_target": "Enemy",
+                "applied_effects": [
+                  {
+                    "effect": {
+                      "type": "ApAttack",
+                      "damage": 50,
+                      "attack_ratio": 65
+                    },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": {
+                      "type": "AddBuff",
+                      "buff_state": {
+                        "name": "mistguide_slow_debuff",
+                        "duration": { "Time": { "tick": 180 } },
+                        "move_speed_mult": -25
+                      }
+                    },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "TargetSfx", "name": "mistguide_skill_hit2" },
+                    "casting_type": "Targeting"
+                  },
+                  {
+                    "effect": { "type": "ViewEffect", "name": "mistguide_skill_hit", "duration": 20 },
+                    "casting_type": "Targeting"
+                  }
+                ]
+              },
+              {
+                "type": "RemoveCasterBuff",
+                "name": "skill1_switch"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.mistguide.skill2",
+    "duration": 50,
+    "cooltime": 510,
+    "start_timing": 0,
+    "range": 81000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "mistguide_skill2_cast" },
+        {
+          "type": "Delayed",
+          "tick": 20,
+          "effects": [
+            { "type": "ViewEffect", "name": "mistguide_skill2_area", "duration": 180 },
+            {
+              "type": "RangePeriodProjectile",
+              "name": "",
+              "tick": 150,
+              "period": 30,
+              "first_delay": 0,
+              "shape": { "Circle": { "radius": 32000 } },
+              "applied_target": "EnemyWithoutTower",
+              "applied_effects": [
+                {
+                  "effect": { "type": "ApAttack", "damage": 20, "attack_ratio": 20 },
+                  "casting_type": "Targeting"
+                }
+              ]
+            },
+            {
+              "type": "RangePeriodProjectile",
+              "name": "",
+              "tick": 181,
+              "period": 30,
+              "first_delay": 0,
+              "shape": { "Circle": { "radius": 32000 } },
+              "applied_target": "Ally",
+              "applied_effects": [
+                {
+                  "effect": {
+                    "type": "Shield",
+                    "amount": 15,
+                    "ap_ratio": 20,
+                    "tick": 240
+                  },
+                  "casting_type": "Targeting"
+                }
+              ]
+            },
+            {
+              "type": "RangePeriodProjectile",
+              "name": "",
+              "tick": 181,
+              "period": 300,
+              "first_delay": 180,
+              "shape": { "Circle": { "radius": 32000 } },
+              "applied_target": "EnemyWithoutTower",
+              "applied_effects": [
+                {
+                  "effect": { "type": "ApAttack", "damage": 0, "attack_ratio": 0 },
+                  "casting_type": "Targeting"
+                },
+                {
+                  "effect": { "type": "Fear", "tick": 40 },
+                  "casting_type": "Targeting"
+                },
+                {
+                  "effect": { "type": "TargetSfx", "name": "mistguide_skill2_fear" },
+                  "casting_type": "Targeting"
+                },
+                {
+                  "effect": { "type": "ViewEffect", "name": "mistguide_skill2_apply", "duration": 20 },
+                  "casting_type": "Targeting"
+                }
+              ]
+            },
+            { "type": "Sfx", "name": "mistguide_skill2_buffsound" },
+            {
+              "type": "Delayed",
+              "tick": 30,
+              "effects": [
+                { "type": "Sfx", "name": "mistguide_skill2_buffsound" }
+              ]
+            },
+            {
+              "type": "Delayed",
+              "tick": 60,
+              "effects": [
+                { "type": "Sfx", "name": "mistguide_skill2_buffsound" }
+              ]
+            },
+            {
+              "type": "Delayed",
+              "tick": 90,
+              "effects": [
+                { "type": "Sfx", "name": "mistguide_skill2_buffsound" }
+              ]
+            },
+            {
+              "type": "Delayed",
+              "tick": 120,
+              "effects": [
+                { "type": "Sfx", "name": "mistguide_skill2_buffsound" }
+              ]
+            },
+            {
+              "type": "Delayed",
+              "tick": 150,
+              "effects": [
+                { "type": "Sfx", "name": "mistguide_skill2_buffsound" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+"ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.mistguide.ult",
+    "duration": 53,
+    "cooltime": 3600,
+    "start_timing": 0,
+    "range": 999999,
+    "casting_type": "Targeting",
+    "casting_target": "AllyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "mistguide_ult_cast1" },
+        {
+          "type": "Delayed",
+          "tick": 36,
+          "effects": [
+            { "type": "Sfx", "name": "mistguide_ult_cast2" },
+            {
+              "type": "WithSelf",
+              "effects": [
+                {
+                  "type": "RandomTarget",
+                  "range": 25000,
+                  "casting_target": "AllyOnlySelf",
+                  "effects": [
+                    { "type": "Invisible", "tick": 300 }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "RangeEffect",
+              "shape": { "Circle": { "radius": 999999 } },
+              "target": "AllyChampion",
+              "apply_type": "AroundCaster",
+              "effects": [
+                { "type": "ViewEffect", "name": "mistguide_ult_hit", "duration": 30 },
+                {
+                  "type": "AddBuff",
+                  "buff_state": {
+                    "name": "mistguide_ult_buff",
+                    "duration": { "Time": { "tick": 300 } },
+                    "move_speed_mult": 30
+                  }
+                },
+                {
+                  "type": "AddBuff",
+                  "buff_state": {
+                    "name": "mistguide_ult_stack_buff",
+                    "duration": "Permanent",
+                    "move_speed_mult": 1,
+                    "is_hidden": true,
+                    "can_stack": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

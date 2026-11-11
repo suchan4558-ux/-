@@ -1,0 +1,255 @@
+{
+  "id": "beastman",
+  "category": "Melee",
+  "tags": ["AD", "CC", "Tank", "Shield"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/beastman",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/beastman_skill",
+    "asset/leefs_variety_all/icons/beastman_skill2",
+    "asset/leefs_variety_all/icons/beastman_ult"
+  ],
+  "stat": {
+    "attack": 100,
+    "magic_power": 0,
+    "hp": 1000,
+    "defence": 30,
+    "magic_resistance": 20,
+    "move_speed": 1000,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 20,
+    "magic_power": 0,
+    "hp": 100,
+    "defence": 9,
+    "magic_resistance": 4,
+    "move_speed": 12,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 60,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 25000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "beastman_enhanced",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Attack", "damage": 0, "attack_ratio": 100 }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "beastman_enhanced_hit" },
+          { "type": "ViewEffect", "name": "beastman_enhanced_hit", "duration": 20 },
+          { "type": "Attack", "damage": 0, "attack_ratio": 100 },
+          { "type": "FixedAttack", "damage": 0, "attack_ratio": 30 },
+          {
+            "type": "WithSelf",
+            "effects": [
+              {
+                "type": "RandomTarget",
+                "range": 25000,
+                "casting_target": "AllyOnlySelf",
+                "effects": [
+                  {
+                    "type": "Shield",
+                    "amount": 0,
+                    "attack_ratio": 30,
+                    "tick": 240
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"view_effects": [
+    {
+      "type": "Animation",
+      "name": "beastman_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/beastman_skill_hit",
+      "tag": "beastman_skill_hit",
+      "z": -1,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "beastman_skill_aim",
+      "anim": "asset/leefs_variety_all/effects/beastman_skill_aim",
+      "tag": "beastman_skill_aim",
+      "z": -1,
+      "is_follow": true
+    },
+    {
+      "type": "Animation",
+      "name": "beastman_ult_hit",
+      "anim": "asset/leefs_variety_all/effects/beastman_ult_hit",
+      "tag": "beastman_ult_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "beastman_enhanced_hit",
+      "anim": "asset/leefs_variety_all/effects/beastman_enhanced_hit",
+      "tag": "beastman_enhanced_hit",
+      "z": 0,
+      "is_follow": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "beastman_enhanced",
+      "anim": "asset/leefs_variety_all/effects/beastman_enhanced",
+      "tag": "beastman_enhanced",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+"skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.beastman.skill",
+    "duration": 54,
+    "cooltime": 360,
+    "start_timing": 0,
+    "range": 39000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "beastman_skill_cast" },
+        { "type": "ViewEffect", "name": "beastman_skill_aim", "duration": 24 },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 30,
+          "period": 100,
+          "first_delay": 25,
+          "shape": { "Circle": { "radius": 23000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "Attack", "damage": 55, "attack_ratio": 60 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Airborne", "duration": 33 }, "casting_type": "Targeting" }
+          ]
+        },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 30,
+          "period": 100,
+          "first_delay": 24,
+          "shape": { "Circle": { "radius": 5000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "Attack", "damage": 55, "attack_ratio": 60 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Airborne", "duration": 60 }, "casting_type": "Targeting" }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 24,
+          "effects": [
+            { "type": "Sfx", "name": "beastman_skill_hit" },
+            { "type": "ViewEffect", "name": "beastman_skill_hit", "duration": 24 }
+          ]
+        }
+      ]
+    }
+  },
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.beastman.skill2",
+    "duration": 23,
+    "cooltime": 600,
+    "start_timing": 0,
+    "range": 50000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "beastman_skill2_cast" },
+        {
+          "type": "Delayed",
+          "tick": 14,
+          "effects": [
+            {
+              "type": "AddCasterBuff",
+              "buff_state": {
+                "name": "beastman_enhanced",
+                "duration": { "Time": { "tick": 300 } }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+"ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.beastman.ult",
+    "duration": 95,
+    "cooltime": 3300,
+    "start_timing": 0,
+    "range": 33000,
+    "casting_type": "Targeting",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "Delayed",
+          "tick": 18,
+          "effects": [
+            { "type": "Sfx", "name": "beastman_ult_cast" },
+            { "type": "ViewEffect", "name": "beastman_ult_hit", "duration": 16 }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 21,
+          "effects": [
+            { "type": "Attack", "damage": 100, "attack_ratio": 130 },
+            { "type": "Stun", "duration": 75 },
+            { "type": "Sfx", "name": "beastman_ult_hit" }
+          ]
+        },
+        {
+          "type": "Delayed",
+          "tick": 50,
+          "effects": [
+            { "type": "Sfx", "name": "beastman_ult_dash" },
+            {
+              "type": "WithSelf",
+              "effects": [
+                { "type": "MoveBack", "speed": 3900, "tick": 32 }
+              ]
+            },
+            { "type": "Grab", "speed": 4400, "tick": 32 }
+          ]
+        }
+      ]
+    }
+  }
+}

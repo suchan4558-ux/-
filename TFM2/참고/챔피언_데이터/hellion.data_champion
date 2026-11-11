@@ -1,0 +1,282 @@
+{
+  "id": "hellion",
+  "name": "Hellion",
+  "category": "Range",
+  "tags": ["AD", "AP", "Dot", "Range"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/hellion",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/hellion_skill",
+    "asset/leefs_variety_all/icons/hellion_skill2",
+    "asset/leefs_variety_all/icons/hellion_ult"
+  ],
+  "stat": {
+    "attack": 100,
+    "magic_power": 30,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 15,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 15,
+    "magic_power": 15,
+    "hp": 90,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+"attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 60,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 70000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "hellion_range",
+      "effect_none": {
+        "type": "TargetProjectile",
+        "speed": 4800,
+        "name": "hellion_projectile",
+        "applied_target": "Enemy",
+        "applied_effects": [
+          {
+            "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+            "casting_type": "Targeting"
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "TargetProjectile",
+        "speed": 4800,
+        "name": "hellion_projectile",
+        "applied_target": "Enemy",
+        "applied_effects": [
+          {
+            "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+            "casting_type": "Targeting"
+          },
+          {
+            "effect": {"type": "ApAttack", "damage": 0, "attack_ratio": 40},
+            "casting_type": "Targeting"
+          }
+        ]
+      }
+    }
+  },
+  "skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.hellion.skill",
+    "duration": 35,
+    "cooltime": 240,
+    "start_timing": 11,
+    "range": 145000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "SwitchByBuff",
+      "buff_name": "hellion_range",
+      "effect_none": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "hellion_skill_cast" },
+          {
+            "type": "Delayed",
+            "tick": 1,
+            "effects": [
+              {
+                "type": "WithSelf",
+                "effects": [
+                  { "type": "MoveBack", "speed": 2700, "tick": 8 }
+                ]
+              },
+              {
+                "type": "LinearProjectile",
+                "name": "hellion_skill_projectile",
+                "speed": 3800,
+                "range": 150000,
+                "shape": { "Circle": { "radius": 6000 } },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  { "effect": { "type": "Attack", "damage": 60, "attack_ratio": 45 }, "casting_type": "Targeting" },
+                  { "effect": { "type": "ApAttack", "damage": 0, "attack_ratio": 45 }, "casting_type": "Targeting" },
+                  { "effect": { "type": "Sfx", "name": "hellion_skill_hit" }, "casting_type": "Targeting" },
+                  { "effect": { "type": "ViewEffect", "name": "hellion_skill_hit", "duration": 24 }, "casting_type": "Targeting" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "effect_buff": {
+        "type": "Combine",
+        "effects": [
+          { "type": "Sfx", "name": "hellion_skill_cast" },
+          {
+            "type": "Delayed",
+            "tick": 1,
+            "effects": [
+              {
+                "type": "WithSelf",
+                "effects": [
+                  { "type": "MoveBack", "speed": 3000, "tick": 13 }
+                ]
+              },
+              {
+                "type": "LinearProjectile",
+                "name": "hellion_skill_projectile",
+                "speed": 3800,
+                "range": 300000,
+                "shape": { "Circle": { "radius": 6000 } },
+                "applied_target": "EnemyWithoutTower",
+                "applied_effects": [
+                  { "effect": { "type": "Attack", "damage": 60, "attack_ratio": 40 }, "casting_type": "Targeting" },
+                  { "effect": { "type": "ApAttack", "damage": 0, "attack_ratio": 40 }, "casting_type": "Targeting" },
+                  { "effect": { "type": "Sfx", "name": "hellion_skill_hit" }, "casting_type": "Targeting" },
+                  { "effect": { "type": "ViewEffect", "name": "hellion_skill_hit", "duration": 24 }, "casting_type": "Targeting" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+"view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "hellion_projectile",
+      "anim": "asset/leefs_variety_all/effects/hellion_projectile",
+      "tag": "hellion_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "hellion_skill_projectile",
+      "anim": "asset/leefs_variety_all/effects/hellion_skill_projectile",
+      "tag": "hellion_skill_projectile",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+"view_effects": [
+    {
+      "type": "Animation",
+      "name": "hellion_skill_hit_vfx",
+      "anim": "asset/leefs_variety_all/effects/hellion_skill_hit",
+      "tag": "hellion_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "hellion_ult_hit_vfx",
+      "anim": "asset/leefs_variety_all/effects/hellion_ult_hit",
+      "tag": "hellion_ult_hit",
+      "z": 0,
+      "is_follow": true
+    }
+  ],
+"view_buffs": [
+    {
+      "type": "Animated",
+      "name": "hellion_range",
+      "anim": "asset/leefs_variety_all/effects/hellion_skill2_buff",
+      "tag": "hellion_skill2_buff",
+      "z": 1,
+      "repeat": true
+    }
+  ],
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.hellion.skill2",
+    "duration": 34,
+    "cooltime": 600,
+    "start_timing": 15,
+    "range": 110000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "hellion_skill2_cast" },
+        {
+          "type": "AddCasterBuff",
+          "buff_state": {
+            "name": "hellion_range",
+            "duration": { "Time": { "tick": 270 } },
+            "move_speed_mult": -30,
+            "range": 40000
+          }
+        }
+      ]
+    }
+  },
+"ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.hellion.ult",
+    "duration": 78,
+    "cooltime": 3300,
+    "start_timing": 0,
+    "cancelable": false,
+    "range": 999999,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "hellion_ult_cast" },
+        {
+          "type": "Delayed",
+          "tick": 42,
+          "effects": [
+            { "type": "Sfx", "name": "hellion_ult_end" },
+            {
+              "type": "RangeEffect",
+              "shape": { "Circle": { "radius": 999999 } },
+              "target": "EnemyChampion",
+              "apply_type": "AroundCaster",
+              "effects": [
+                { "type": "TargetSfx", "name": "hellion_ult_hit" },
+                { "type": "ViewEffect", "name": "hellion_ult_hit_vfx", "duration": 30 },
+                {
+                  "type": "AddCasted",
+                  "duration": 360,
+                  "period": 60,
+                  "casted_type": "Fire",
+                  "effects": [
+                    { "type": "Attack", "damage": 0, "attack_ratio": 15 },
+                    { "type": "ApAttack", "damage": 0, "attack_ratio": 25 }
+                  ]
+                },
+                {
+                  "type": "AddBuff",
+                  "buff_state": {
+                    "name": "hellion_burn_heal",
+                    "duration": { "Time": { "tick": 360 } },
+                    "heal_reduce": 50
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+ }

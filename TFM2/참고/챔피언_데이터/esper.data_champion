@@ -1,0 +1,529 @@
+{
+  "id": "esper",
+  "category": "Util",
+  "tags": [
+    "AP",
+    "CC",
+    "Range",
+    "Magic"
+  ],
+  "sprite": "asset/cf_space_viking/champions/esper",
+  "anim_prefix": "",
+  "stat": {
+    "attack": 80,
+    "crit_chance": 0,
+    "defence": 30,
+    "hp": 880,
+    "hp_regen": 0,
+    "magic_power": 40,
+    "magic_resistance": 15,
+    "move_speed": 1100,
+    "stack": 0
+  },
+  "skill_icons": [
+    "asset/cf_space_viking/icons/esper_skill",
+    "asset/cf_space_viking/icons/esper_skill2",
+    "asset/cf_space_viking/icons/esper_ult"
+  ],
+  "growth": {
+    "attack": 20,
+    "crit_chance": 0,
+    "defence": 7,
+    "hp": 90,
+    "hp_regen": 0,
+    "magic_power": 18,
+    "magic_resistance": 5,
+    "move_speed": 10,
+    "stack": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "attack_type": "BaseAttack",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "Enemy",
+    "casting_type": "Targeting",
+    "cooltime": 70,
+    "description": "#asset/base/text/champion?description.esper.attack",
+    "duration": 25,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "SwitchByBuff",
+          "buff_name": "rock_one",
+          "effect_none": {
+            "type": "AutoTargetProjectile",
+            "speed": 3400,
+            "range": 56000,
+            "name": "basic_proj",
+            "y_offset": 0,
+            "applied_target": "Enemy",
+            "applied_effects": [
+              {
+                "effect": {
+                  "type": "Attack",
+                  "damage": 0,
+                  "attack_ratio": 100,
+                  "ap_ratio": 0,
+                  "hp_ratio": 0,
+                  "target_hp_ratio": 0,
+                  "attack_effect_type": "Target"
+                },
+                "casting_type": "Targeting"
+              },
+              {
+                "effect": {
+                  "type": "Sfx",
+                  "name": ""
+                },
+                "casting_type": "Targeting"
+              }
+            ]
+          },
+          "effect_buff": {
+            "type": "Combine",
+            "effects": [
+              {
+                "type": "SwitchByBuff",
+                "buff_name": "rock_two",
+                "effect_none": {
+                  "type": "Combine",
+                  "effects": [
+                    {
+                      "type": "AutoTargetProjectile",
+                      "speed": 4200,
+                      "range": 85000,
+                      "name": "rock_proj",
+                      "y_offset": 0,
+                      "applied_target": "Enemy",
+                      "applied_effects": [
+                        {
+                          "effect": {
+                            "type": "Attack",
+                            "damage": 40,
+                            "attack_ratio": 120,
+                            "ap_ratio": 0,
+                            "hp_ratio": 0,
+                            "target_hp_ratio": 0,
+                            "attack_effect_type": "Target"
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "Stun",
+                            "duration": 15
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "Attack",
+                            "damage": 0,
+                            "attack_ratio": 100,
+                            "ap_ratio": 0,
+                            "hp_ratio": 0,
+                            "target_hp_ratio": 0,
+                            "attack_effect_type": "Target"
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "ViewEffect",
+                            "name": "rock_impact"
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "TargetSfx",
+                            "name": "fighter_skill2"
+                          },
+                          "casting_type": "Targeting"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "RemoveCasterBuff",
+                      "name": "rock_one"
+                    },
+                    {
+                      "type": "RemoveCasterBuff",
+                      "name": "movement_buff"
+                    }
+                  ]
+                },
+                "effect_buff": {
+                  "type": "Combine",
+                  "effects": [
+                    {
+                      "type": "AutoTargetProjectile",
+                      "speed": 4200,
+                      "range": 85000,
+                      "name": "rock_proj",
+                      "y_offset": 0,
+                      "applied_target": "Enemy",
+                      "applied_effects": [
+                        {
+                          "effect": {
+                            "type": "Attack",
+                            "damage": 40,
+                            "attack_ratio": 120,
+                            "ap_ratio": 0,
+                            "hp_ratio": 0,
+                            "target_hp_ratio": 0,
+                            "attack_effect_type": "Target"
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "Stun",
+                            "duration": 15
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "ViewEffect",
+                            "name": "rock_impact"
+                          },
+                          "casting_type": "Targeting"
+                        },
+                        {
+                          "effect": {
+                            "type": "TargetSfx",
+                            "name": "fighter_skill2"
+                          },
+                          "casting_type": "Targeting"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "RemoveCasterBuff",
+                      "name": "rock_two"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "barrier_magician_attack"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 60000,
+    "start_timing": 8
+  },
+  "skill": {
+    "action_name": "skill",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "EnemyChampion",
+    "casting_type": "Targeting",
+    "cooltime": 360,
+    "description": "#asset/base/text/champion?description.esper.skill",
+    "duration": 25,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "LinearProjectile",
+          "penetrate": false,
+          "speed": 3400,
+          "range": 85000,
+          "name": "skill_proj",
+          "y_offset": 0,
+          "shape": {
+            "Circle": {
+              "radius": 10000
+            }
+          },
+          "applied_target": "EnemyChampion",
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "ApAttack",
+                "damage": 30,
+                "attack_ratio": 70,
+                "ap_ratio": 0,
+                "hp_ratio": 0,
+                "attack_effect_type": "Target"
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Bind",
+                "duration": 30
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "ViewEffect",
+                "name": "esper_root"
+              },
+              "casting_type": "Targeting"
+            },
+            {
+              "effect": {
+                "type": "Delayed",
+                "tick": 30,
+                "effects": [
+                  {
+                    "type": "Pull",
+                    "speed": 3200,
+                    "tick": 20
+                  },
+                  {
+                    "type": "CasterAnimation",
+                    "name": "skill_pull",
+                    "tick": 25
+                  },
+                  {
+                    "type": "TargetSfx",
+                    "name": "druid_attack"
+                  }
+                ]
+              },
+              "casting_type": "Targeting"
+            }
+          ],
+          "end_effects": [
+            {
+              "type": "Sfx",
+              "name": "wind_mage_skill1"
+            }
+          ]
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 85000,
+    "start_timing": 8
+  },
+  "skill2": {
+    "action_name": "skill2",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "AllyOnlySelf",
+    "casting_type": "None",
+    "cooltime": 840,
+    "description": "#asset/base/text/champion?description.esper.skill2",
+    "duration": 35,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "AddCasterBuff",
+          "only_to_enemy": false,
+          "buff_state": {
+            "name": "rock_two",
+            "duration": {
+              "Time": {
+                "tick": 480
+              }
+            }
+          }
+        },
+        {
+          "type": "AddCasterBuff",
+          "only_to_enemy": false,
+          "buff_state": {
+            "name": "rock_one",
+            "duration": {
+              "Time": {
+                "tick": 480
+              }
+            }
+          }
+        },
+        {
+          "type": "AddCasterBuff",
+          "only_to_enemy": false,
+          "buff_state": {
+            "name": "movement_buff",
+            "duration": {
+              "Time": {
+                "tick": 480
+              }
+            },
+            "move_speed_mult": 10
+          }
+        },
+        {
+          "type": "Sfx",
+          "name": "druid_skill2"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 0,
+    "start_timing": 35
+  },
+  "ult": {
+    "action_name": "ult",
+    "attack_type": "Skill",
+    "can_use_with_move": false,
+    "cancelable": false,
+    "casting_target": "EnemyWithoutTower",
+    "casting_type": "Position",
+    "cooltime": 3600,
+    "description": "#asset/base/text/champion?description.esper.ult",
+    "duration": 30,
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        {
+          "type": "RangePeriodProjectile",
+          "shape": {
+            "Circle": {
+              "radius": 25000
+            }
+          },
+          "tick": 65,
+          "period": 10,
+          "first_delay": 0,
+          "name": "",
+          "applied_target": "Enemy",
+          "applied_effects": [
+            {
+              "effect": {
+                "type": "Pull",
+                "speed": 1400,
+                "tick": 10
+              },
+              "casting_type": "Targeting"
+            }
+          ],
+          "end_effects": []
+        },
+        {
+          "type": "Delayed",
+          "tick": 65,
+          "effects": [
+            {
+              "type": "RangeProjectile",
+              "name": "",
+              "delay": 30,
+              "apply": 30,
+              "shape": {
+                "Circle": {
+                  "radius": 25000
+                }
+              },
+              "applied_target": "Enemy",
+              "applied_effects": [
+                {
+                  "effect": {
+                    "type": "Airborne",
+                    "duration": 90
+                  },
+                  "casting_type": "Targeting"
+                },
+                {
+                  "effect": {
+                    "type": "Attack",
+                    "damage": 50,
+                    "attack_ratio": 50,
+                    "ap_ratio": 0,
+                    "hp_ratio": 0,
+                    "target_hp_ratio": 0,
+                    "attack_effect_type": "Target"
+                  },
+                  "casting_type": "Targeting"
+                }
+              ]
+            },
+            {
+              "type": "TargetSfx",
+              "name": "ult_detonate_cast"
+            }
+          ]
+        },
+        {
+          "type": "ViewEffect",
+          "name": "void_effect"
+        },
+        {
+          "type": "TargetSfx",
+          "name": "ult_pull_cast"
+        }
+      ]
+    },
+    "growth_range": 0,
+    "range": 80000,
+    "start_timing": 0
+  },
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "void_effect",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_ult",
+      "tag": "ult",
+      "z": -1,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "rock_impact",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_rock_impact",
+      "tag": "impact",
+      "z": 1,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "esper_root",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_root",
+      "tag": "loop",
+      "is_follow": false
+    }
+  ],
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "basic_proj",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_attack_projectile",
+      "tag": "attack",
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "rock_proj",
+      "anim": "asset/cf_space_viking/esper/telekenis/skill2_projectile",
+      "tag": "skill2_projectile",
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "skill_proj",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_attack_projectile",
+      "tag": "skill",
+      "repeat": true
+    }
+  ],
+  "view_buffs": [
+    {
+      "type": "Animated",
+      "name": "rock_two",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_buff_effect_two_and_one",
+      "tag": "two"
+    },
+    {
+      "type": "Animated",
+      "name": "rock_one",
+      "anim": "asset/cf_space_viking/esper/telekenis/esper_buff_effect_two_and_one",
+      "tag": "one"
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "id": "planemage",
+  "name": "Plane Mage",
+  "category": "Magician",
+  "tags": ["AP", "Range"],
+  "sprite": "asset/leefs_variety_all/aseprite_resources/champions/planemage",
+  "anim_prefix": "",
+  "skill_icons": [
+    "asset/leefs_variety_all/icons/planemage_skill",
+    "asset/leefs_variety_all/icons/planemage_skill2",
+    "asset/leefs_variety_all/icons/planemage_ult"
+  ],
+  "stat": {
+    "attack": 85,
+    "magic_power": 50,
+    "hp": 900,
+    "defence": 20,
+    "magic_resistance": 20,
+    "move_speed": 900,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "growth": {
+    "attack": 6,
+    "magic_power": 20,
+    "hp": 100,
+    "defence": 7,
+    "magic_resistance": 3,
+    "move_speed": 9,
+    "hp_regen": 0,
+    "stack": 0,
+    "crit_chance": 0
+  },
+  "attack": {
+    "action_name": "attack",
+    "duration": 24,
+    "cooltime": 90,
+    "start_timing": 12,
+    "cancelable": true,
+    "range": 60000,
+    "casting_type": "Targeting",
+    "casting_target": "Enemy",
+    "attack_type": "BaseAttack",
+    "effect": {
+      "type": "TargetProjectile",
+      "speed": 4600,
+      "name": "planemage_projectile",
+      "applied_target": "Enemy",
+      "applied_effects": [
+        {
+          "effect": {"type": "Attack", "damage": 0, "attack_ratio": 100},
+          "casting_type": "Targeting"
+        }
+      ]
+    }
+  },
+  "skill": {
+    "action_name": "skill",
+    "description": "#asset/base/text/champion?description.planemage.skill",
+    "duration": 25,
+    "cooltime": 300,
+    "start_timing": 5,
+    "range": 75000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "planemage_skill_cast1" },
+        { "type": "ViewEffect", "name": "tentacle_visual" },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 50,
+          "shape": { "Circle": { "radius": 27000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 60, "attack_ratio": 65 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_tentacle_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 146,
+          "shape": { "Circle": { "radius": 27000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 60, "attack_ratio": 65 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_tentacle_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        { "type": "Delayed", "tick": 50, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 146, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 210, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_despawn" }] }
+      ]
+    }
+  },
+  "view_projectiles": [
+    {
+      "type": "Animated",
+      "name": "planemage_projectile",
+      "anim": "asset/leefs_variety_all/effects/planemage_projectile",
+      "tag": "planemage_projectile",
+      "z": 0,
+      "repeat": true
+    },
+    {
+      "type": "Animated",
+      "name": "planemage_attack",
+      "anim": "asset/leefs_variety_all/effects/oni_projectile",
+      "tag": "planemage_projectile",
+      "z": 0,
+      "repeat": true
+    }
+  ],
+  "view_effects": [
+    {
+      "type": "Animation",
+      "name": "hellion_skill_hit",
+      "anim": "asset/leefs_variety_all/effects/hellion_skill_hit",
+      "tag": "hellion_skill_hit",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "tentacle_visual",
+      "anim": "asset/leefs_variety_all/effects/planemage_tentacle",
+      "tag": "full",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "tentacle_visual2",
+      "anim": "asset/leefs_variety_all/effects/planemage_tentacle",
+      "tag": "full",
+      "z": 0,
+      "is_follow": false
+    },
+    {
+      "type": "Animation",
+      "name": "tentacle_visual3",
+      "anim": "asset/leefs_variety_all/effects/planemage_tentacle_ult",
+      "tag": "full",
+      "z": 0,
+      "is_follow": false
+    }
+  ],
+"skill2": {
+    "action_name": "skill2",
+    "description": "#asset/base/text/champion?description.planemage.skill2",
+    "duration": 25,
+    "cooltime": 510,
+    "start_timing": 5,
+    "range": 75000,
+    "casting_type": "Position",
+    "casting_target": "EnemyWithoutTower",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "planemage_skill2_cast" },
+        { "type": "Sfx", "name": "planemage_skill_cast3" },
+        {
+          "type": "AddCasterBuff",
+          "buff_state": {
+            "name": "planemage_skill2_speed",
+            "duration": { "Time": { "tick": 150 } },
+            "move_speed_mult": 20
+          }
+        },
+        { "type": "ViewEffect", "name": "tentacle_visual2" },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 50,
+          "shape": { "Circle": { "radius": 27000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 60, "attack_ratio": 65 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_tentacle_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 146,
+          "shape": { "Circle": { "radius": 27000 } },
+          "applied_target": "EnemyWithoutTower",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 60, "attack_ratio": 65 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_tentacle_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        { "type": "Delayed", "tick": 50, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 146, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 210, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_despawn" }] },
+        {
+          "type": "Delayed",
+          "tick": 1,
+          "effects": [
+            {
+              "type": "WithSelf",
+              "effects": [
+                {
+                  "type": "RandomTarget",
+                  "range": 51000,
+                  "casting_target": "EnemyChampion",
+                  "effects": [
+                    {
+                      "type": "WithSelf",
+                      "effects": [
+                        { "type": "MoveBack", "speed": 3300, "tick": 14 }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ult": {
+    "action_name": "ult",
+    "description": "#asset/base/text/champion?description.planemage.ult",
+    "duration": 35,
+    "cooltime": 3600,
+    "start_timing": 5,
+    "cancelable": false,
+    "range": 75000,
+    "casting_type": "Position",
+    "casting_target": "EnemyChampion",
+    "attack_type": "Skill",
+    "effect": {
+      "type": "Combine",
+      "effects": [
+        { "type": "Sfx", "name": "planemage_ult_cast" },
+		{ "type": "Delayed", "tick": 2, "effects": [{ "type": "Sfx", "name": "planemage_skill_cast2" }] },
+        { "type": "CasterViewEffect", "name": "planemage_ultrunes" },
+        { "type": "ViewEffect", "name": "tentacle_visual3" },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 50,
+          "shape": { "Circle": { "radius": 52000 } },
+          "applied_target": "EnemyChampion",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 120, "attack_ratio": 100 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Stun", "duration": 30 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_ult_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        {
+          "type": "RangePeriodProjectile",
+          "name": "",
+          "tick": 218,
+          "period": 168,
+          "first_delay": 146,
+          "shape": { "Circle": { "radius": 52000 } },
+          "applied_target": "EnemyChampion",
+          "applied_effects": [
+            { "effect": { "type": "ApAttack", "damage": 120, "attack_ratio": 100 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Stun", "duration": 30 }, "casting_type": "Targeting" },
+            { "effect": { "type": "Sfx", "name": "planemage_ult_hit" }, "casting_type": "Targeting" }
+          ]
+        },
+        { "type": "Delayed", "tick": 50, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 146, "effects": [{ "type": "Sfx", "name": "planemage_tentacle_whiff" }] },
+        { "type": "Delayed", "tick": 210, "effects": [{ "type": "Sfx", "name": "planemage_ult_despawn" }] }
+      ]
+    }
+  }
+}
