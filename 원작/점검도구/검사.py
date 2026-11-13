@@ -152,8 +152,9 @@ if lines is not None:
         if not fs: return
         sp = spans(row)
         fr = [rng(f['행']) for f in fs if rng(f.get('행', ''))]
-        if sp and not any(a <= sb + 2 and b >= sa - 2 for a, b in fr for sa, sb in sp):
-            bad.append(f'{where}: 이은 사실의 행이 그 줄의 이 장면 근거 행({", ".join(f"{a}-{b}" for a, b in sp)})과 겹치지 않음')
+        for sa, sb in sp:   # 근거 행 범위마다 겹치는 사실이 있어야 함
+            if not any(a <= sb + 2 and b >= sa - 2 for a, b in fr):
+                bad.append(f'{where}: 이은 사실이 근거 행 {sa}-{sb}과 겹치지 않음')
         if fname == '표기와 원문 문제.md': return
         c = cells(row)
         if len(c) < 5: return
