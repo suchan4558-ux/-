@@ -55,7 +55,9 @@ m = re.search(r'고치지 않고 최종점검 남은 것\.md에 적음: (.*?)\.\
 KINDS = [k.strip() for k in m.group(1).split(',')] if m else []
 if not KINDS: bad.append('지금 하는 일.md에서 남은 것의 종류를 찾지 못함')
 LEFT = open(os.path.join(D, '최종점검 남은 것.md'), encoding='utf-8').read()
-used = [int(x) for x in re.findall(r'^\|?\s*-?\s*(\d+)[.|)]', LEFT, re.M)]
+LEFTROW = {int(m.group(1)): m.group(2) for m in re.finditer(r'^- (\d+)\. (.*)$', LEFT, re.M)}
+mine = {p.get('번호') for p in res.get('남은 것', []) if isinstance(p.get('번호'), int) and LEFTROW.get(p['번호'], '').startswith(str(p.get('무엇', '')) + '.')}
+used = [k for k in LEFTROW if k not in mine]   # 이 기록에서 이미 반영한 번호(번호와 "무엇"이 같은 줄)는 겹침으로 보지 않음
 last = max(used) if used else 0
 
 # 대조표
@@ -163,7 +165,7 @@ if lines is not None:
         nm = [x for x in nums if x not in q.replace(',', '')]
         if nm and not p.get('숫자 까닭'): bad.append(f'{where}: 줄의 숫자 {", ".join(nm)}가 이은 사실의 인용에 없음(숫자 까닭 없음)')
         elif nm: why_ok(where, '숫자 까닭', p.get('숫자 까닭'))
-        t = QUOTED.sub(' ', c[2] + ' ' + c[3]); names = []
+        t = QUOTED.sub(' ', c[3]); names = []   # 이름은 내용 칸만 봄(시점 칸의 "아스타테 직전" 같은 말은 시점 꼴)
         for s in STD:
             if re.search(r'(?<![가-힣])' + re.escape(s), t):
                 names.append(s); t = t.replace(s, ' ')
@@ -191,7 +193,7 @@ if lines is not None:
             if i not in FACT: bad.append(f'{w}: 사실 {i}가 없음')
     if left:
         ks = sorted(left)
-        if ks[0] <= last: bad.append(f'남은 것 번호 {ks[0]}이 이미 쓴 번호({last}까지)와 겹침')
+        if any(k in used for k in ks) or (ks[0] <= last and not set(ks) <= mine): bad.append(f'남은 것 번호 {ks[0]}이 이미 쓴 번호({last}까지)와 겹침')
         if ks != list(range(ks[0], ks[0] + len(ks))): bad.append(f'남은 것 번호가 이어지지 않음: {ks}')
     ref_left, linked = set(), set()
 
