@@ -3,6 +3,7 @@
 #       통과면 "통과"와 셈을, 아니면 걸린 것을 모두 적고 끝 코드 1.
 #       다른 파일을 검사하려면 셋째 인자로 기록 파일 경로를 줌.
 #       기록에 "줄"이 아직 없으면(사실 뽑기 단계) 단락과 사실만 검사함.
+#       "줄"이 있으면 갈래 1~11과 표기마다 뽑기.py로 기준과 줄을 모든 쪽까지 찍었는지도 봄(결과/1-3_2_띄움.json).
 #       장면의 정리본 줄 목록은 뽑기.py의 파일을 읽지 않고 같은 규칙으로 직접 셈.
 #
 # 기록 파일 꼴
@@ -423,6 +424,22 @@ if lines is not None:
     lonely = sorted(k for k in set(left) - ref_left if not left[k].get('사실') or any(i not in FACT for i in left[k]['사실']))
     if lonely: bad.append(f'줄이나 남는 사실에서 가리키지 않았고 이 장면의 사실도 적지 않은 남은 것: {lonely}')
 
+# 갈래마다 뽑기.py로 기준과 줄을 모든 쪽까지 찍었는지, 그 뒤 기준 파일과 줄 목록이 바뀌지 않았는지
+if lines is not None:
+    import hashlib
+    sp_ = os.path.join(R, f'{tag}_{n}_띄움.json')
+    shown_ = json.load(open(sp_, encoding='utf-8')) if os.path.exists(sp_) else {}
+    ksig = hashlib.sha1(open(os.path.join(D, '원작 정리본 기준.md'), encoding='utf-8').read().encode('utf-8')).hexdigest()
+    LINEKEYS = [r['줄'] for r in lines]
+    for g_ in [str(i) for i in range(1, 12)] + ['표기']:
+        pre = '표기와 원문 문제.md:' if g_ == '표기' else None
+        mine = sorted(k for k in LINEKEYS if (k.startswith(pre) if pre else k.split('_')[0] == g_))
+        e = shown_.get(g_)
+        if not e: bad.append(f'갈래 {g_}: 뽑기.py로 기준과 줄을 찍은 기록이 없음'); continue
+        left = [k for k in range(1, e.get('쪽 수', 0) + 1) if k not in e.get('띄운 쪽', [])]
+        if left: bad.append(f'갈래 {g_}: 안 찍은 쪽이 있음 {left}')
+        if e.get('기준 지문') != ksig: bad.append(f'갈래 {g_}: 찍은 뒤 기준 파일이 바뀜(다시 찍어야 함)')
+        if sorted(e.get('줄', [])) != mine: bad.append(f'갈래 {g_}: 찍은 줄 목록이 지금의 줄 목록과 다름(다시 찍어야 함)')
 stage = '사실 뽑기' if lines is None else '전체'
 if bad:
     print(f'{tag} 장면 {n} ({stage}): 걸림 {len(bad)}'); print('\n'.join(bad)); sys.exit(1)
