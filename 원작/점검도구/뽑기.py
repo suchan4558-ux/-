@@ -4,6 +4,8 @@
 #       python3 뽑기.py 1-3 2 줄 7 → 그 장면 행이 근거에 든 정리본 줄 가운데 갈래 7(7_….md)의 줄만
 #                                  결과/1-3_2_줄_7.json에 적음. 갈래는 1~11 또는 "표기"(표기와 원문 문제.md).
 #                                  갈래를 주지 않으면 돌리지 않음(갈래마다 기준을 편 뒤 그 갈래만 봄).
+#                                  줄 목록보다 먼저 원작 정리본 기준.md의 공통 기준과 그 갈래의 기준
+#                                  (표기는 별도 절차)을 화면에 찍고, 결과 파일에도 "기준"으로 넣음.
 # 사실을 뽑는 동안에는 "줄"을 돌리지 않음.
 # 검사.py는 이 파일을 읽지 않고 같은 규칙으로 장면의 줄 전체를 직접 셈.
 import re, sys, glob, os, json
@@ -36,6 +38,17 @@ if mode == '단락':
 elif mode == '줄':
     if g is None or not (g == '표기' or (g.isdigit() and 1 <= int(g) <= 11)):
         print('넷째 인자로 갈래(1~11 또는 "표기")를 줌'); sys.exit(1)
+    K = open(os.path.join(D, '원작 정리본 기준.md'), encoding='utf-8').read().split('\n')
+    def sect(start, stop):
+        a = next(i for i, l in enumerate(K) if start(l))
+        b = next((i for i in range(a + 1, len(K)) if stop(K[i])), len(K))
+        return '\n'.join(K[a:b]).rstrip()
+    common = sect(lambda l: l.startswith('## 공통 기준'), lambda l: l.startswith('## '))
+    if g == '표기':
+        own = sect(lambda l: l.startswith('## 별도 절차'), lambda l: l.startswith('- 중간점검'))
+    else:
+        own = sect(lambda l: re.match(rf'^{g}\. ', l), lambda l: re.match(r'^\d+\. ', l) or l.startswith('#'))
+    print(common); print(); print(own); print()
     files = [D + '/표기와 원문 문제.md'] if g == '표기' else [f for f in glob.glob(D + '/*.md') if os.path.basename(f).split('_')[0] == g]
     cit = re.compile(r'(?<![\d-])(\d)-(\d{1,2})\(([^)]*)\)')
     rows = []
@@ -53,7 +66,7 @@ elif mode == '줄':
                         hit = True
             if hit:
                 rows.append({'줄': f'{os.path.basename(f)}:{i}', '원래 줄': l.rstrip('\n')})
-    out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '줄 수': len(rows), '목록': rows}
+    out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '기준': common + '\n\n' + own, '줄 수': len(rows), '목록': rows}
     json.dump(out, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{tag} 장면 {n} ({lo}~{hi}) 갈래 {g}: 정리본 줄 {len(rows)} → {p}')
 

@@ -8,7 +8,7 @@
 # 기록 파일 꼴
 # {
 #  "단락": [                                  ← 단락 목록의 단락마다 하나
-#   {"단락": 1, "사실": [{"번호": 1, "행": "105-106", "구절": "원문 그대로(60자 안)", "내용": "사실 하나"}]},
+#   {"단락": 1, "사실": [{"번호": 1, "이름표": "탈출", "행": "105-106", "구절": "원문 그대로(60자 안)", "내용": "사실 하나"}]},
 #   {"단락": 2, "없음": "적을 사실이 없는 까닭"}
 #  ],
 #  "줄": [                                    ← 정리본 줄 목록의 줄마다 하나
@@ -16,15 +16,16 @@
 #   {"줄": "...", "처리": "고침", "사실": [3], "고친 줄": "| ... |", "까닭": "...", "기준": ["기준 문장 그대로"],
 #    "같은 줄": ["7_….md:34"] 또는 ["없음"]},
 #   {"줄": "...", "처리": "남은 것", "남은 것": 59, "기준": ["..."]}
-#   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭". 까닭에는 줄의 근거 칸에 있는 "권-장"이나 "원문 문제 N"을 적음)
+#   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭". 까닭에는 줄의 근거 칸에 있는 권-장의 "권-장(행) '원문 구절'"이나 "원문 문제 N"을 적음)
+#   (사실은 번호 대신 이름표로 가리켜도 됨. 줄, 남는 사실, 남은 것 모두 같음)
 #  ],
 #  "남는 사실": [                              ← 어느 줄에도 이어지지 않은 사실마다 하나
 #   {"사실": 4, "처리": "근거 덧붙임", "줄": "1_인물.md:456", "고친 줄": "| ... |"},
 #   {"사실": 5, "처리": "남은 것", "남은 것": 60},
 #   {"사실": 6, "처리": "적을 것 없음", "종류": "기준상 뺌", "기준": ["..."], "까닭": "..."},
-#   {"사실": 7, "처리": "적을 것 없음", "종류": "줄여 적힘", "줄": "7_….md:32", "까닭": "..."}
+#   {"사실": 7, "처리": "적을 것 없음", "종류": "줄여 적힘", "줄": "7_….md:32", "받는 말": "그 줄 안의 말 그대로", "까닭": "..."}
 #  ],
-#  "남은 것": [                               ← 이 장면에서 새로 생긴 남은 것
+#  "남은 것": [                               ← 이 장면에서 새로 생긴 남은 것(줄이나 남는 사실에서 가리키지 않으면 "사실"이 있어야 함)
 #   {"번호": 59, "종류": "빠진 내용", "무엇": "...", "문구 안": "...", "자리": "...", "까닭": "...",
 #    "사실": [5], "기준": ["..."]}
 #  ]
@@ -142,6 +143,24 @@ for p in res.get('단락', []):
         if len(norm(g)) < 4: bad.append(f'{fw}: 구절이 너무 짧음 "{g}"'); continue
         if len(norm(g)) > QMAX: bad.append(f'{fw}: 구절이 {QMAX}자를 넘음({len(norm(g))}자)'); continue
         if norm(g) not in norm(''.join(SRC[r[0] - 1:r[1]])): bad.append(f'{fw}: 구절 "{g[:40]}"이 원문 {f.get("행")}행에 없음')
+TAG = {}
+for i, f in FACT.items():
+    t = f.get('이름표')
+    if t is None: continue
+    if not isinstance(t, str) or not t.strip(): bad.append(f'사실 {i}: 이름표 꼴 틀림'); continue
+    if t in TAG: bad.append(f'사실 {i}: 이름표 "{t}" 겹침(사실 {TAG[t]})'); continue
+    TAG[t] = i
+def rid(x, where):
+    if isinstance(x, str):
+        if x in TAG: return TAG[x]
+        bad.append(f'{where}: 이름표 "{x}"인 사실이 없음'); return None
+    return x
+for p in res.get('줄', []):
+    if isinstance(p.get('사실'), list): p['사실'] = [y for y in (rid(x, p.get('줄')) for x in p['사실']) if y is not None]
+for p in res.get('남는 사실', []):
+    if isinstance(p.get('사실'), str): p['사실'] = rid(p['사실'], '남는 사실')
+for p in res.get('남은 것', []):
+    if isinstance(p.get('사실'), list): p['사실'] = [y for y in (rid(x, f'남은 것 {p.get("번호")}') for x in p['사실']) if y is not None]
 miss = [k for k in paras if k not in seen]
 if miss: bad.append(f'빈 단락 {len(miss)}: ' + ', '.join(map(str, miss)))
 
@@ -170,9 +189,22 @@ if lines is not None:
     def src_ok(where, field, v, row):
         if not why_ok(where, field, v): return
         refc = cells(row)[-1] if row else ''
-        ok = any(f'{a}-{b}(' in refc for a, b in re.findall(r'(?<![\d-])(\d)-(\d{1,2})(?![\d])', v))
+        ok = False
+        for a, b, r1, r2, q in CITEQ.findall(v):
+            if f'{a}-{b}(' not in refc:
+                bad.append(f'{where}: {field}의 {a}-{b}가 줄의 근거 칸에 없음'); continue
+            L = srcfile(a); x, y = int(r1), int(r2 or r1)
+            if norm(q) and norm(q) in norm(''.join(L[x - 1:y])): ok = True
+            else: bad.append(f'{where}: {field}의 구절 "{q[:30]}"이 {a}권 원문 {x}-{y}행에 없음')
         ok = ok or any(int(x) in PROB for x in re.findall(r'원문 문제 (\d+)', v))
-        if not ok: bad.append(f'{where}: {field}에 줄의 근거 칸에 있는 권-장이나 원문 문제 표에 있는 번호가 없음')
+        if not ok: bad.append(f"{where}: {field}에 줄의 근거 칸에 있는 \"권-장(행) '원문 구절'\"이나 원문 문제 표에 있는 번호가 없음")
+    CITEQ = re.compile(r"(?<![\d-])(\d)-(\d{1,2})\((\d+)(?:-(\d+))?\)\s*['‘\"“]([^'’\"”]+)['’\"”]")
+    SRCS = {}
+    def srcfile(a):
+        if a not in SRCS:
+            fn = {'1': 'eun01_1.txt', '2': 'eun02.txt', '3': 'eun03.txt', '4': 'eun04.txt'}[a]
+            SRCS[a] = open(os.path.join(T, '..', '원문', fn), encoding='utf-8').read().split('\n')
+        return SRCS[a]
     NUM = re.compile(r'\d[\d,]*')
     def chk_facts_vs_row(where, p, row, fname, fids):
         fs = [FACT[i] for i in fids if i in FACT]
@@ -290,15 +322,19 @@ if lines is not None:
                 row = file_line(p.get('줄'))
                 fr = rng(FACT[i].get('행', ''))
                 if row is None: bad.append(f'{w}: 줄여 받은 줄 {p.get("줄")}이 없음')
-                elif fr and not any(a <= fr[1] + 2 and b >= fr[0] - 2 for a, b in spans(row)):
-                    bad.append(f'{w}: 줄여 받은 줄의 이 장 근거가 사실의 행 {FACT[i]["행"]}을 덮지 않음')
+                else:
+                    if fr and not any(a <= fr[1] + 2 and b >= fr[0] - 2 for a, b in spans(row)):
+                        bad.append(f'{w}: 줄여 받은 줄의 이 장 근거가 사실의 행 {FACT[i]["행"]}을 덮지 않음')
+                    bm = p.get('받는 말')
+                    if not bm or len(norm(bm)) < 2: bad.append(f'{w}: 받는 말(그 줄 안에서 이 사실을 받는 말)이 없음')
+                    elif norm(bm) not in norm(row): bad.append(f'{w}: 받는 말 "{bm[:30]}"이 줄 {p.get("줄")}에 없음')
             else: bad.append(f'{w}: 종류가 "줄여 적힘"이나 "기준상 뺌"이 아님')
         else:
             bad.append(f'{w}: 처리 값 "{k}"')
     orphan = sorted(set(FACT) - linked - rest)
     if orphan: bad.append(f'줄에도 이어지지 않고 처리도 안 한 사실 {len(orphan)}: ' + ', '.join(map(str, orphan[:40])))
-    lonely = sorted(set(left) - ref_left)
-    if lonely: bad.append(f'줄이나 남는 사실에서 가리키지 않은 남은 것: {lonely}')
+    lonely = sorted(k for k in set(left) - ref_left if not left[k].get('사실') or any(i not in FACT for i in left[k]['사실']))
+    if lonely: bad.append(f'줄이나 남는 사실에서 가리키지 않았고 이 장면의 사실도 적지 않은 남은 것: {lonely}')
 
 stage = '사실 뽑기' if lines is None else '전체'
 if bad:
