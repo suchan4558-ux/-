@@ -16,7 +16,7 @@
 #  "줄": [                                    ← 정리본 줄 목록의 줄마다 하나
 #   {"줄": "1_인물.md:123", "처리": "이음", "사실": [1, 2]},
 #   {"줄": "...", "처리": "고침", "사실": [3], "고친 줄": "| ... |", "까닭": "...", "기준": ["기준 문장 그대로"],
-#    "같은 줄": ["7_….md:34"] 또는 ["없음"]},
+#    "같은 줄": ["7_….md:34"] 또는 ["없음"]},   ← 고친 뒤에도 고치지 못한 물음이 남으면 "남은 것": 번호
 #   {"줄": "...", "처리": "남은 것", "남은 것": 59, "기준": ["..."]}   ← 번호는 이 기록의 "남은 것"이나 "앞 남은 것"에 있어야 함
 #   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭". 까닭에는 줄의 근거 칸에 있는 권-장의 "권-장(행) '원문 구절'"이나 "원문 문제 N"을 적음)
 #   (사실은 번호 대신 이름표로 가리켜도 됨. 줄, 남는 사실, 남은 것 모두 같음)
@@ -35,7 +35,7 @@
 #   {"번호": 4, "자리": "7_….md:53, 54", "장과 원문 행": "1권 서장 266-310"}
 #  ],
 #  "남은 것": [                               ← 이 장면에서 새로 생긴 남은 것(줄이나 남는 사실에서 가리키지 않으면 "사실"이 있어야 함)
-#   {"번호": 59, "종류": "빠진 내용", "무엇": "...", "문구 안": "...", "자리": "...", "까닭": "...",
+#   {"번호": 59, "종류": "기준", "무엇": "...", "문구 안": "...", "자리": "...", "장과 원문 행": "1권 서장 266-310", "까닭": "...",
 #    "사실": [5], "기준": ["..."]}
 #  ]
 # }
@@ -114,6 +114,9 @@ for l in open(os.path.join(D, '표기와 원문 문제.md'), encoding='utf-8'):
         FORMS.setdefault(c[1], {c[1]}).add(t)
         core = re.sub(TITLE, '', t)                    # 앞뒤에 붙은 작위·직함만 다른 것은 같은 표기
         if len(t) >= 2 and norm(core) not in norm(c[1]): PYO.append((t, c[1]))   # 기준 표기의 줄임은 문장 안에서 써도 됨
+TOKOWN = {}
+for _std, _forms in FORMS.items():
+    for _t in {t for form in _forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}: TOKOWN[_t] = TOKOWN.get(_t, 0) + 1
 STD = sorted(ALLSTD, key=len, reverse=True)            # 다른 사람의 기준 표기와 같은 번역본 표기는 가릴 수 없어 검사에서 뺌
 
 def why_ok(where, field, v):
@@ -166,7 +169,8 @@ for p in res.get('단락', []):
     pn = norm(ptxt); mnm = []
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
-        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn for t in toks)
+        # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
+        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn and TOKOWN.get(t) == 1 for t in toks)
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
@@ -277,7 +281,7 @@ if lines is not None:
         if k in left: bad.append(f'{w}: 번호 겹침')
         left[k] = p
         if p.get('종류') not in KINDS: bad.append(f'{w}: 종류 "{p.get("종류")}"가 {KINDS} 가운데 하나가 아님')
-        for f in ('무엇', '문구 안', '자리'):
+        for f in ('무엇', '문구 안', '자리', '장과 원문 행'):
             if not p.get(f): bad.append(f'{w}: {f} 없음')
         why_ok(w, '까닭', p.get('까닭'))
         chk_crit(w, p.get('기준'))
@@ -330,6 +334,9 @@ if lines is not None:
                 for k2 in sl:
                     if file_line(k2) is None: bad.append(f'{w}: 같은 줄 {k2}이 없음')
             new = p.get('고친 줄')
+            if p.get('남은 것') is not None:      # 고친 줄에 고치지 못한 물음이 남으면 그 번호도 가리킴
+                if p.get('남은 것') not in known: bad.append(f'{w}: 남은 것 번호 {p.get("남은 것")}가 기록의 "남은 것"이나 "앞 남은 것"에 없음')
+                ref_left.add(p.get('남은 것'))
             if chk_row(w, new, fn):
                 if cells(new) == cells(orig[w]): bad.append(f'{w}: 고친 줄이 원래 줄과 같음(바뀐 칸 없음)')
                 chk_pyo(w, new, fn)
