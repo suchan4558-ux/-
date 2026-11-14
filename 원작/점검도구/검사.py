@@ -167,10 +167,11 @@ for p in res.get('단락', []):
         left_n = [x for x in mn if x not in v]
         if left_n or len(norm(v)) < WHYMIN: bad.append(f'{w}: 원문의 숫자 {", ".join(left_n or mn)}가 사실의 구절에 없음("뺀 숫자" 까닭 없음)')
     pn = norm(ptxt); mnm = []
+    ps = re.sub(r'[ \t\u3000]+', ' ', ptxt.replace('\n', ''))   # 낱말 하나로 찾을 때는 띄어쓰기를 살린 글에서 찾음(앞뒤 낱말이 붙어 생긴 글자를 이름으로 보지 않음)
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
         # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
-        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn and TOKOWN.get(t) == 1 for t in toks)
+        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in ps and TOKOWN.get(t) == 1 for t in toks)
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
