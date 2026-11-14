@@ -101,6 +101,7 @@ last = max(used) if used else 0
 # 대조표
 PYO = []            # (번역본 표기, 기준 표기): 기준 표기와 다른 번역본 표기
 ALLSTD = set()      # 모든 기준 표기
+PERSON = set()      # 인물 표의 기준 표기(성이나 이름만 나온 것을 낱말 하나로 찾는 것은 사람 이름에만)
 FORMS = {}          # 기준 표기 → 원문에 나올 수 있는 표기들
 TITLE = r'(공작|후작|백작|자작|남작|제독|원수|대장|중장|소장|준장|대령|중령|소령|대위|중위|소위|부인|황제|황후|경)(?=\s|$)|^(공작|후작|백작|자작|남작|제독)\s'
 sec = None
@@ -110,6 +111,7 @@ for l in open(os.path.join(D, '표기와 원문 문제.md'), encoding='utf-8'):
         c = [x.strip() for x in l.rstrip().split('|')[1:-1]]
         if len(c) < 2 or not c[1]: continue
         ALLSTD.add(c[1])
+        if sec == '인물': PERSON.add(c[1])
         t = re.sub(r'\(.*?\)', '', c[0]).strip()       # 괄호 안은 같은 표기 가운데 누구인지 가르는 말
         FORMS.setdefault(c[1], {c[1]}).add(t)
         core = re.sub(TITLE, '', t)                    # 앞뒤에 붙은 작위·직함만 다른 것은 같은 표기
@@ -171,7 +173,7 @@ for p in res.get('단락', []):
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
         # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
-        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in ps and TOKOWN.get(t) == 1 for t in toks)
+        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or (std in PERSON and any(len(t) >= 3 and t in ps and TOKOWN.get(t) == 1 for t in toks))
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
