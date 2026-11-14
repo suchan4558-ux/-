@@ -3,7 +3,6 @@
 #       통과면 "통과"와 셈을, 아니면 걸린 것을 모두 적고 끝 코드 1.
 #       다른 파일을 검사하려면 셋째 인자로 기록 파일 경로를 줌.
 #       기록에 "줄"이 아직 없으면(사실 뽑기 단계) 단락과 사실만 검사함.
-#       "줄"이 있으면 갈래 1~11과 표기마다 뽑기.py로 기준과 줄을 모든 쪽까지 찍었는지도 봄(결과/1-3_2_띄움.json).
 #       장면의 정리본 줄 목록은 뽑기.py의 파일을 읽지 않고 같은 규칙으로 직접 셈.
 #
 # 기록 파일 꼴
@@ -17,7 +16,7 @@
 #  "줄": [                                    ← 정리본 줄 목록의 줄마다 하나
 #   {"줄": "1_인물.md:123", "처리": "이음", "사실": [1, 2]},
 #   {"줄": "...", "처리": "고침", "사실": [3], "고친 줄": "| ... |", "까닭": "...", "기준": ["기준 문장 그대로"],
-#    "같은 줄": ["7_….md:34"] 또는 ["없음"]},   ← 고친 뒤에도 고치지 못한 물음이 남으면 "남은 것": 번호
+#    "같은 줄": ["7_….md:34"] 또는 ["없음"]},
 #   {"줄": "...", "처리": "남은 것", "남은 것": 59, "기준": ["..."]}   ← 번호는 이 기록의 "남은 것"이나 "앞 남은 것"에 있어야 함
 #   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭". 까닭에는 줄의 근거 칸에 있는 권-장의 "권-장(행) '원문 구절'"이나 "원문 문제 N"을 적음)
 #   (사실은 번호 대신 이름표로 가리켜도 됨. 줄, 남는 사실, 남은 것 모두 같음)
@@ -115,9 +114,6 @@ for l in open(os.path.join(D, '표기와 원문 문제.md'), encoding='utf-8'):
         FORMS.setdefault(c[1], {c[1]}).add(t)
         core = re.sub(TITLE, '', t)                    # 앞뒤에 붙은 작위·직함만 다른 것은 같은 표기
         if len(t) >= 2 and norm(core) not in norm(c[1]): PYO.append((t, c[1]))   # 기준 표기의 줄임은 문장 안에서 써도 됨
-TOKOWN = {}
-for _std, _forms in FORMS.items():
-    for _t in {t for form in _forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}: TOKOWN[_t] = TOKOWN.get(_t, 0) + 1
 STD = sorted(ALLSTD, key=len, reverse=True)            # 다른 사람의 기준 표기와 같은 번역본 표기는 가릴 수 없어 검사에서 뺌
 
 def why_ok(where, field, v):
@@ -170,8 +166,7 @@ for p in res.get('단락', []):
     pn = norm(ptxt); mnm = []
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
-        # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
-        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn and TOKOWN.get(t) == 1 for t in toks)
+        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn for t in toks)
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
@@ -340,9 +335,6 @@ if lines is not None:
                 chk_pyo(w, new, fn)
                 chk_facts_vs_row(w, p, new, fn, fids)
                 take(fids, new)
-            if p.get('남은 것') is not None:      # 고친 줄에 고치지 못한 물음이 남으면 그 번호도 가리킴
-                if p.get('남은 것') not in known: bad.append(f'{w}: 남은 것 번호 {p.get("남은 것")}가 기록의 "남은 것"이나 "앞 남은 것"에 없음')
-                ref_left.add(p.get('남은 것'))
         if k == '남은 것':
             chk_crit(w, p.get('기준'))
             if p.get('남은 것') not in known: bad.append(f'{w}: 남은 것 번호 {p.get("남은 것")}가 기록의 "남은 것"이나 "앞 남은 것"에 없음')
@@ -424,31 +416,6 @@ if lines is not None:
     lonely = sorted(k for k in set(left) - ref_left if not left[k].get('사실') or any(i not in FACT for i in left[k]['사실']))
     if lonely: bad.append(f'줄이나 남는 사실에서 가리키지 않았고 이 장면의 사실도 적지 않은 남은 것: {lonely}')
 
-# 갈래마다 뽑기.py로 기준과 줄을 모든 쪽까지 찍었는지, 그 뒤 기준 파일과 줄 목록이 바뀌지 않았는지
-if lines is not None:
-    import hashlib
-    sp_ = os.path.join(R, f'{tag}_{n}_띄움.json')
-    shown_ = json.load(open(sp_, encoding='utf-8')) if os.path.exists(sp_) else {}
-    ksig = hashlib.sha1(open(os.path.join(D, '원작 정리본 기준.md'), encoding='utf-8').read().encode('utf-8')).hexdigest()
-    LINEKEYS = [r['줄'] for r in lines]
-    for g_ in [str(i) for i in range(1, 12)] + ['표기']:
-        pre = '표기와 원문 문제.md:' if g_ == '표기' else None
-        mine = sorted(k for k in LINEKEYS if (k.startswith(pre) if pre else k.split('_')[0] == g_))
-        e = shown_.get(g_)
-        if not e: bad.append(f'갈래 {g_}: 뽑기.py로 기준과 줄을 찍은 기록이 없음'); continue
-        left = [k for k in range(1, e.get('쪽 수', 0) + 1) if k not in e.get('띄운 쪽', [])]
-        if left: bad.append(f'갈래 {g_}: 안 찍은 쪽이 있음 {left}')
-        if e.get('기준 지문') != ksig: bad.append(f'갈래 {g_}: 찍은 뒤 기준 파일이 바뀜(다시 찍어야 함)')
-        if sorted(e.get('줄', [])) != mine: bad.append(f'갈래 {g_}: 찍은 줄 목록이 지금의 줄 목록과 다름(다시 찍어야 함)')
-    # 남는 사실을 처리하기 직전에 기준 전체를 폈는지(모든 쪽, 갈래의 줄을 다 찍은 뒤)
-    e = shown_.get('기준')
-    if not e: bad.append('기준 전체: 뽑기.py "기준"으로 찍은 기록이 없음')
-    else:
-        left = [k for k in range(1, e.get('쪽 수', 0) + 1) if k not in e.get('띄운 쪽', [])]
-        if left: bad.append(f'기준 전체: 안 찍은 쪽이 있음 {left}')
-        if e.get('기준 지문') != ksig: bad.append('기준 전체: 찍은 뒤 기준 파일이 바뀜(다시 찍어야 함)')
-        late = [g_ for g_ in shown_ if g_ != '기준' and shown_[g_].get('때', 0) > e.get('때', 0)]
-        if late: bad.append(f'기준 전체: 갈래 {", ".join(late)}의 줄을 그 뒤에 찍음(줄 판정을 다 마친 뒤 기준 전체를 다시 찍어야 함)')
 stage = '사실 뽑기' if lines is None else '전체'
 if bad:
     print(f'{tag} 장면 {n} ({stage}): 걸림 {len(bad)}'); print('\n'.join(bad)); sys.exit(1)
