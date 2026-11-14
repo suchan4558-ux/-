@@ -7,7 +7,8 @@
 #                                  줄 목록보다 먼저 원작 정리본 기준.md의 공통 기준과 그 갈래의 기준
 #                                  (표기는 별도 절차)을 화면에 찍고, 결과 파일에도 "기준"으로 넣음.
 #                                  줄마다 그 줄의 이 장면 근거 원문을 함께 찍고(앞 줄과 근거가 같으면 "위와 같음"),
-#                                  끝에 같은 대상·같은 항목인데 이 장 근거가 없는 줄을 찍음(표기는 뺌).
+#                                  끝에 같은 대상·같은 항목인데 이 장 근거가 없는 줄을 찍음(표기는 뺌. 한 묶음이 15줄을 넘으면
+#                                  화면에는 수만 찍고 전부는 결과 파일에 넣음).
 #                                  출력을 버리거나(/dev/null) 파일로 돌리면 돌지 않음.
 # 사실을 뽑는 동안에는 "줄"을 돌리지 않음.
 # 검사.py는 이 파일을 읽지 않고 같은 규칙으로 장면의 줄 전체를 직접 셈.
@@ -97,7 +98,15 @@ elif mode == '줄':
         prev = r['근거 행']
     if others:
         print(); print('같은 대상·같은 항목인데 이 장 근거가 없는 줄')
-        for r in others: print(r['줄'], r['원래 줄'])
+        grp = {}
+        for r in others:
+            c = [x.strip() for x in r['원래 줄'].split('|')[1:3]]
+            grp.setdefault(tuple(c), []).append(r)
+        for c, rs in grp.items():      # 한 묶음이 15줄을 넘으면 화면에는 수만 찍음(전부는 결과 파일의 "같은 대상·같은 항목"에 있음)
+            if len(rs) > 15:
+                print(f'({c[0]} | {c[1]}: {len(rs)}줄. 결과 파일에 있음)')
+            else:
+                for r in rs: print(r['줄'], r['원래 줄'])
     for r in rows: r.pop('근거 행')
     out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '기준': common + '\n\n' + own, '줄 수': len(rows), '목록': rows, '같은 대상·같은 항목': others}
     json.dump(out, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
