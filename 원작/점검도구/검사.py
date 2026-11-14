@@ -114,6 +114,9 @@ for l in open(os.path.join(D, '표기와 원문 문제.md'), encoding='utf-8'):
         FORMS.setdefault(c[1], {c[1]}).add(t)
         core = re.sub(TITLE, '', t)                    # 앞뒤에 붙은 작위·직함만 다른 것은 같은 표기
         if len(t) >= 2 and norm(core) not in norm(c[1]): PYO.append((t, c[1]))   # 기준 표기의 줄임은 문장 안에서 써도 됨
+TOKOWN = {}
+for _std, _forms in FORMS.items():
+    for _t in {t for form in _forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}: TOKOWN[_t] = TOKOWN.get(_t, 0) + 1
 STD = sorted(ALLSTD, key=len, reverse=True)            # 다른 사람의 기준 표기와 같은 번역본 표기는 가릴 수 없어 검사에서 뺌
 
 def why_ok(where, field, v):
@@ -166,7 +169,8 @@ for p in res.get('단락', []):
     pn = norm(ptxt); mnm = []
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
-        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn for t in toks)
+        # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
+        hit = any(len(norm(form)) >= 2 and norm(form) in pn for form in forms) or any(len(t) >= 3 and t in pn and TOKOWN.get(t) == 1 for t in toks)
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
