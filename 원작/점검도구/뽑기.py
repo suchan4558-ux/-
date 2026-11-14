@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 # 사용: python3 뽑기.py 1-3 2 단락 → 1권 3장의 2번째 장면(장면.json 차례) 원문을 단락으로 나눠
 #                                  결과/1-3_2_단락.json에 적음(공백으로 시작하는 줄에서 새 단락, 빈 줄에서 단락 끝)
-#       python3 뽑기.py 1-3 2 줄   → 그 장면 행이 근거에 든 정리본 줄(1~11, 표기와 원문 문제.md)을
-#                                  결과/1-3_2_줄.json에 적음
+#       python3 뽑기.py 1-3 2 줄 7 → 그 장면 행이 근거에 든 정리본 줄 가운데 갈래 7(7_….md)의 줄만
+#                                  결과/1-3_2_줄_7.json에 적음. 갈래는 1~11 또는 "표기"(표기와 원문 문제.md).
+#                                  갈래를 주지 않으면 돌리지 않음(갈래마다 기준을 편 뒤 그 갈래만 봄).
 # 사실을 뽑는 동안에는 "줄"을 돌리지 않음.
+# 검사.py는 이 파일을 읽지 않고 같은 규칙으로 장면의 줄 전체를 직접 셈.
 import re, sys, glob, os, json
 T = os.path.dirname(os.path.abspath(__file__))
 D = os.path.join(T, '..', '정리본')
 tag, n, mode = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+g = sys.argv[4] if len(sys.argv) > 4 else None
 scenes = json.load(open(os.path.join(T, '장면.json'), encoding='utf-8'))
 lo, hi = map(int, scenes[tag][n - 1].split('~'))
 os.makedirs(os.path.join(T, '결과'), exist_ok=True)
-p = os.path.join(T, '결과', f'{tag}_{n}_{mode}.json')
+p = os.path.join(T, '결과', f'{tag}_{n}_{mode}.json' if mode != '줄' else f'{tag}_{n}_줄_{g}.json')
 
 if mode == '단락':
     src = {'1': 'eun01_1.txt', '2': 'eun02.txt', '3': 'eun03.txt', '4': 'eun04.txt'}[tag.split('-')[0]]
@@ -31,8 +34,9 @@ if mode == '단락':
     print(f'{tag} 장면 {n} ({lo}~{hi}): 단락 {len(paras)} → {p}')
 
 elif mode == '줄':
-    files = sorted([f for f in glob.glob(D + '/*.md') if re.match(r'\d+_', os.path.basename(f))],
-                   key=lambda f: int(os.path.basename(f).split('_')[0])) + [D + '/표기와 원문 문제.md']
+    if g is None or not (g == '표기' or (g.isdigit() and 1 <= int(g) <= 11)):
+        print('넷째 인자로 갈래(1~11 또는 "표기")를 줌'); sys.exit(1)
+    files = [D + '/표기와 원문 문제.md'] if g == '표기' else [f for f in glob.glob(D + '/*.md') if os.path.basename(f).split('_')[0] == g]
     cit = re.compile(r'(?<![\d-])(\d)-(\d{1,2})\(([^)]*)\)')
     rows = []
     for f in files:
@@ -49,9 +53,9 @@ elif mode == '줄':
                         hit = True
             if hit:
                 rows.append({'줄': f'{os.path.basename(f)}:{i}', '원래 줄': l.rstrip('\n')})
-    out = {'장': tag, '장면': n, '행': f'{lo}~{hi}', '줄 수': len(rows), '목록': rows}
+    out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '줄 수': len(rows), '목록': rows}
     json.dump(out, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print(f'{tag} 장면 {n} ({lo}~{hi}): 정리본 줄 {len(rows)} → {p}')
+    print(f'{tag} 장면 {n} ({lo}~{hi}) 갈래 {g}: 정리본 줄 {len(rows)} → {p}')
 
 else:
     print('셋째 인자는 "단락" 또는 "줄"'); sys.exit(1)

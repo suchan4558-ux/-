@@ -2,7 +2,8 @@
 # 사용: python3 검사.py 1-3 2  → 결과/1-3_2_기록.json을 검사.
 #       통과면 "통과"와 셈을, 아니면 걸린 것을 모두 적고 끝 코드 1.
 #       다른 파일을 검사하려면 셋째 인자로 기록 파일 경로를 줌.
-#       결과/1-3_2_줄.json이 아직 없으면(사실 뽑기 단계) 단락과 사실만 검사함.
+#       기록에 "줄"이 아직 없으면(사실 뽑기 단계) 단락과 사실만 검사함.
+#       장면의 정리본 줄 목록은 뽑기.py의 파일을 읽지 않고 같은 규칙으로 직접 셈.
 #
 # 기록 파일 꼴
 # {
@@ -12,14 +13,16 @@
 #  ],
 #  "줄": [                                    ← 정리본 줄 목록의 줄마다 하나
 #   {"줄": "1_인물.md:123", "처리": "이음", "사실": [1, 2]},
-#   {"줄": "...", "처리": "고침", "사실": [3], "고친 줄": "| ... |", "까닭": "...", "기준": ["기준 문장 그대로"]},
+#   {"줄": "...", "처리": "고침", "사실": [3], "고친 줄": "| ... |", "까닭": "...", "기준": ["기준 문장 그대로"],
+#    "같은 줄": ["7_….md:34"] 또는 ["없음"]},
 #   {"줄": "...", "처리": "남은 것", "남은 것": 59, "기준": ["..."]}
-#   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭")
+#   (이음과 고침에는 필요하면 "숫자 까닭", "이름 까닭". 까닭에는 줄의 근거 칸에 있는 "권-장"이나 "원문 문제 N"을 적음)
 #  ],
 #  "남는 사실": [                              ← 어느 줄에도 이어지지 않은 사실마다 하나
 #   {"사실": 4, "처리": "근거 덧붙임", "줄": "1_인물.md:456", "고친 줄": "| ... |"},
 #   {"사실": 5, "처리": "남은 것", "남은 것": 60},
-#   {"사실": 6, "처리": "적을 것 없음", "기준": ["..."], "까닭": "..."}
+#   {"사실": 6, "처리": "적을 것 없음", "종류": "기준상 뺌", "기준": ["..."], "까닭": "..."},
+#   {"사실": 7, "처리": "적을 것 없음", "종류": "줄여 적힘", "줄": "7_….md:32", "까닭": "..."}
 #  ],
 #  "남은 것": [                               ← 이 장면에서 새로 생긴 남은 것
 #   {"번호": 59, "종류": "빠진 내용", "무엇": "...", "문구 안": "...", "자리": "...", "까닭": "...",
@@ -36,8 +39,6 @@ src = {'1': 'eun01_1.txt', '2': 'eun02.txt', '3': 'eun03.txt', '4': 'eun04.txt'}
 SRC = open(os.path.join(T, '..', '원문', src), encoding='utf-8').read().split('\n')
 R = os.path.join(T, '결과')
 para_list = json.load(open(os.path.join(R, f'{tag}_{n}_단락.json'), encoding='utf-8'))['단락']
-lp = os.path.join(R, f'{tag}_{n}_줄.json')
-lines = json.load(open(lp, encoding='utf-8'))['목록'] if os.path.exists(lp) else None
 rp = sys.argv[3] if len(sys.argv) > 3 else os.path.join(R, f'{tag}_{n}_기록.json')
 try:
     res = json.load(open(rp, encoding='utf-8'))
@@ -45,6 +46,32 @@ except Exception as e:
     print('기록 파일을 읽을 수 없음:', e); sys.exit(1)
 bad = []
 ws = re.compile(r'\s+')
+cit = re.compile(r'(?<![\d-])(\d)-(\d{1,2})\(([^)]*)\)')
+def spans(row):
+    out = []
+    for mm in cit.finditer(row or ''):
+        if f'{mm.group(1)}-{mm.group(2)}' != tag: continue
+        for part in mm.group(3).split(','):
+            nums = re.findall(r'\d+', part)
+            if nums: out.append((int(nums[0]), int(nums[-1])))
+    return [(a, b) for a, b in out if a <= hi and b >= lo]
+def all_lines():
+    import glob
+    files = sorted([f for f in glob.glob(D + '/*.md') if re.match(r'\d+_', os.path.basename(f))],
+                   key=lambda f: int(os.path.basename(f).split('_')[0])) + [D + '/표기와 원문 문제.md']
+    rows = []
+    for f in files:
+        for i, l in enumerate(open(f, encoding='utf-8'), 1):
+            if l.startswith('| ') and spans(l):
+                rows.append({'줄': f'{os.path.basename(f)}:{i}', '원래 줄': l.rstrip('\n')})
+    return rows
+def file_line(k):
+    f = str(k).split(':')
+    if len(f) != 2 or not f[1].isdigit() or not os.path.exists(os.path.join(D, f[0])): return None
+    L = open(os.path.join(D, f[0]), encoding='utf-8').read().split('\n')
+    i = int(f[1])
+    return L[i - 1] if 1 <= i <= len(L) else None
+lines = all_lines() if '줄' in res else None
 def norm(s): return ws.sub('', s or '')
 QMAX, WHYMIN = 60, 10
 
@@ -139,15 +166,13 @@ if lines is not None:
         for s in STD: t = t.replace(s, ' ')
         for a, b in PYO:
             if re.search(r'(?<![가-힣])' + re.escape(a), t): bad.append(f'{where}: 대조표의 번역본 표기 "{a}"가 쓰임(기준 표기 "{b}")')
-    cit = re.compile(r'(?<![\d-])(\d)-(\d{1,2})\(([^)]*)\)')
-    def spans(row):
-        out = []
-        for mm in cit.finditer(row or ''):
-            if f'{mm.group(1)}-{mm.group(2)}' != tag: continue
-            for part in mm.group(3).split(','):
-                nums = re.findall(r'\d+', part)
-                if nums: out.append((int(nums[0]), int(nums[-1])))
-        return [(a, b) for a, b in out if a <= hi and b >= lo]
+    PROB = {int(m.group(1)) for m in re.finditer(r'^\| (\d+) \|', open(os.path.join(D, '표기와 원문 문제.md'), encoding='utf-8').read(), re.M)}
+    def src_ok(where, field, v, row):
+        if not why_ok(where, field, v): return
+        refc = cells(row)[-1] if row else ''
+        ok = any(f'{a}-{b}(' in refc for a, b in re.findall(r'(?<![\d-])(\d)-(\d{1,2})(?![\d])', v))
+        ok = ok or any(int(x) in PROB for x in re.findall(r'원문 문제 (\d+)', v))
+        if not ok: bad.append(f'{where}: {field}에 줄의 근거 칸에 있는 권-장이나 원문 문제 표에 있는 번호가 없음')
     NUM = re.compile(r'\d[\d,]*')
     def chk_facts_vs_row(where, p, row, fname, fids):
         fs = [FACT[i] for i in fids if i in FACT]
@@ -164,7 +189,7 @@ if lines is not None:
         nums = sorted({x.replace(',', '') for x in NUM.findall(c[2] + ' ' + c[3])})
         nm = [x for x in nums if x not in q.replace(',', '')]
         if nm and not p.get('숫자 까닭'): bad.append(f'{where}: 줄의 숫자 {", ".join(nm)}가 이은 사실의 인용에 없음(숫자 까닭 없음)')
-        elif nm: why_ok(where, '숫자 까닭', p.get('숫자 까닭'))
+        elif nm: src_ok(where, '숫자 까닭', p.get('숫자 까닭'), row)
         t = QUOTED.sub(' ', c[3]); names = []   # 이름은 내용 칸만 봄(시점 칸의 "아스타테 직전" 같은 말은 시점 꼴)
         for s in STD:
             if re.search(r'(?<![가-힣])' + re.escape(s), t):
@@ -176,7 +201,7 @@ if lines is not None:
             return False
         nn = [s for s in names if not found(s)]
         if nn and not p.get('이름 까닭'): bad.append(f'{where}: 줄의 이름 {", ".join(nn)}가 이은 사실의 인용에 없음(이름 까닭 없음)')
-        elif nn: why_ok(where, '이름 까닭', p.get('이름 까닭'))
+        elif nn: src_ok(where, '이름 까닭', p.get('이름 까닭'), row)
 
     left = {}
     for p in res.get('남은 것', []):
@@ -221,6 +246,11 @@ if lines is not None:
         if k == '고침':
             why_ok(w, '까닭', p.get('까닭'))
             chk_crit(w, p.get('기준'))
+            sl = p.get('같은 줄')
+            if not isinstance(sl, list) or not sl: bad.append(f'{w}: 같은 줄(같은 대상·같은 때를 적은 다른 줄, 없으면 ["없음"])이 없음')
+            elif sl != ['없음']:
+                for k2 in sl:
+                    if file_line(k2) is None: bad.append(f'{w}: 같은 줄 {k2}이 없음')
             new = p.get('고친 줄')
             if chk_row(w, new, fn):
                 if new.strip() == orig[w].strip(): bad.append(f'{w}: 고친 줄이 원래 줄과 같음')
@@ -253,8 +283,16 @@ if lines is not None:
             if p.get('남은 것') not in left: bad.append(f'{w}: 남은 것 번호 {p.get("남은 것")}가 기록의 "남은 것"에 없음')
             ref_left.add(p.get('남은 것'))
         elif k == '적을 것 없음':
-            chk_crit(w, p.get('기준'))
             why_ok(w, '까닭', p.get('까닭'))
+            kind = p.get('종류')
+            if kind == '기준상 뺌': chk_crit(w, p.get('기준'))
+            elif kind == '줄여 적힘':
+                row = file_line(p.get('줄'))
+                fr = rng(FACT[i].get('행', ''))
+                if row is None: bad.append(f'{w}: 줄여 받은 줄 {p.get("줄")}이 없음')
+                elif fr and not any(a <= fr[1] + 2 and b >= fr[0] - 2 for a, b in spans(row)):
+                    bad.append(f'{w}: 줄여 받은 줄의 이 장 근거가 사실의 행 {FACT[i]["행"]}을 덮지 않음')
+            else: bad.append(f'{w}: 종류가 "줄여 적힘"이나 "기준상 뺌"이 아님')
         else:
             bad.append(f'{w}: 처리 값 "{k}"')
     orphan = sorted(set(FACT) - linked - rest)
