@@ -24,15 +24,7 @@
 | 2 | Terminator 픽 점수 개편 (4-4 진행 순서대로) | 4 |
 | 3 | 0.7.2 실행 파일로 2-1 게임 규칙 재확인 | 2 |
 
-## 0-2. 지금 반영할 것 (사용자)
-
-| 할 일 | 내용 |
-|---|---|
-| Terminator | 저장소 `TFM2/모드/terminator_draft/`의 `terminator_draft.dll` + `config.ini`를 mods의 `terminator_draft`에 덮어쓰기 (패치 크기 분류 반영본) |
-| Toolbox | 저장소 `TFM2/모드/drafters_toolkit/config.ini` (`tier_min_matches=10`)를 mods의 `drafters_toolkit`에 덮어쓰기 |
-| 데이터베이스 | 새 `DataBase_기본.tfm2db`(자동 밸런스패치 결정값 포함)로 기존 파일 교체 |
-
-## 0-3. 돌려본 뒤 확인·판단
+## 0-2. 돌려본 뒤 확인·판단
 
 | 할 일 | 방법 | 판단할 것 | 장 |
 |---|---|---|---|
