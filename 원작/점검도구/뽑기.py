@@ -43,7 +43,10 @@ elif mode == '줄':
         print('넷째 인자로 갈래(1~11 또는 "표기")를 줌'); sys.exit(1)
     import stat
     st = os.fstat(1)
-    if stat.S_ISREG(st.st_mode) or (stat.S_ISCHR(st.st_mode) and st.st_rdev == os.stat('/dev/null').st_rdev):
+    try: to = os.readlink('/proc/self/fd/1')
+    except OSError: to = ''
+    shown = re.search(r'/tasks/[^/]+\.output$', to)      # 채팅 도구가 화면 출력을 받아 두는 파일은 화면으로 봄
+    if (stat.S_ISREG(st.st_mode) and not shown) or (stat.S_ISCHR(st.st_mode) and st.st_rdev == os.stat('/dev/null').st_rdev):
         print('출력을 버리거나 파일로 돌리면 돌지 않음(기준과 줄을 화면에 찍어야 함)', file=sys.stderr); sys.exit(1)
     K = open(os.path.join(D, '원작 정리본 기준.md'), encoding='utf-8').read().split('\n')
     def sect(start, stop):
