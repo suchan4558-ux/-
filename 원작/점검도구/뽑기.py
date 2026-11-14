@@ -6,6 +6,9 @@
 #                                  갈래를 주지 않으면 돌리지 않음(갈래마다 기준을 편 뒤 그 갈래만 봄).
 #                                  줄 목록보다 먼저 원작 정리본 기준.md의 공통 기준과 그 갈래의 기준
 #                                  (표기는 별도 절차)을 화면에 찍고, 결과 파일에도 "기준"으로 넣음.
+#                                  줄마다 그 줄의 이 장면 근거 원문을 함께 찍고(앞 줄과 근거가 같으면 "위와 같음"),
+#                                  끝에 같은 대상·같은 항목인데 이 장 근거가 없는 줄을 찍음(표기는 뺌).
+#                                  출력을 버리거나(/dev/null) 파일로 돌리면 돌지 않음.
 # 사실을 뽑는 동안에는 "줄"을 돌리지 않음.
 # 검사.py는 이 파일을 읽지 않고 같은 규칙으로 장면의 줄 전체를 직접 셈.
 import re, sys, glob, os, json
@@ -38,6 +41,10 @@ if mode == '단락':
 elif mode == '줄':
     if g is None or not (g == '표기' or (g.isdigit() and 1 <= int(g) <= 11)):
         print('넷째 인자로 갈래(1~11 또는 "표기")를 줌'); sys.exit(1)
+    import stat
+    st = os.fstat(1)
+    if stat.S_ISREG(st.st_mode) or (stat.S_ISCHR(st.st_mode) and st.st_rdev == os.stat('/dev/null').st_rdev):
+        print('출력을 버리거나 파일로 돌리면 돌지 않음(기준과 줄을 화면에 찍어야 함)', file=sys.stderr); sys.exit(1)
     K = open(os.path.join(D, '원작 정리본 기준.md'), encoding='utf-8').read().split('\n')
     def sect(start, stop):
         a = next(i for i, l in enumerate(K) if start(l))
@@ -51,22 +58,45 @@ elif mode == '줄':
     print(common); print(); print(own); print()
     files = [D + '/표기와 원문 문제.md'] if g == '표기' else [f for f in glob.glob(D + '/*.md') if os.path.basename(f).split('_')[0] == g]
     cit = re.compile(r'(?<![\d-])(\d)-(\d{1,2})\(([^)]*)\)')
-    rows = []
+    src = {'1': 'eun01_1.txt', '2': 'eun02.txt', '3': 'eun03.txt', '4': 'eun04.txt'}[tag.split('-')[0]]
+    SRC = open(os.path.join(T, '..', '원문', src), encoding='utf-8').read().split('\n')
+    rows, others, allrows = [], [], []
     for f in files:
         for i, l in enumerate(open(f, encoding='utf-8'), 1):
-            if not l.startswith('| '):
+            if not l.startswith('| ') or l.startswith('|---'):
                 continue
-            hit = False
+            sp, chap = [], False
             for m in cit.finditer(l):
                 if f'{m.group(1)}-{m.group(2)}' != tag:
                     continue
+                chap = True
                 for part in m.group(3).split(','):
                     nums = re.findall(r'\d+', part)
                     if nums and int(nums[0]) <= hi and int(nums[-1]) >= lo:
-                        hit = True
-            if hit:
-                rows.append({'줄': f'{os.path.basename(f)}:{i}', '원래 줄': l.rstrip('\n')})
-    out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '기준': common + '\n\n' + own, '줄 수': len(rows), '목록': rows}
+                        sp.append((max(int(nums[0]), lo), min(int(nums[-1]), hi)))
+            key = f'{os.path.basename(f)}:{i}'
+            c = [x.strip() for x in l.rstrip().split('|')[1:-1]]
+            allrows.append((key, c[:2], chap, l.rstrip('\n')))
+            if sp:
+                rows.append({'줄': key, '원래 줄': l.rstrip('\n'), '근거 행': sp})
+    if g != '표기':
+        want = {tuple(c) for k, c, chap, l in allrows if any(r['줄'] == k for r in rows)}
+        others = [{'줄': k, '원래 줄': l} for k, c, chap, l in allrows if tuple(c) in want and not chap]
+    prev = None
+    for r in rows:
+        print(r['줄'], r['원래 줄'])
+        if r['근거 행'] == prev:
+            print('    (근거 원문은 위와 같음)')
+        else:
+            for a, b in r['근거 행']:
+                for j in range(a, b + 1):
+                    print(f'    {j}: {SRC[j - 1]}')
+        prev = r['근거 행']
+    if others:
+        print(); print('같은 대상·같은 항목인데 이 장 근거가 없는 줄')
+        for r in others: print(r['줄'], r['원래 줄'])
+    for r in rows: r.pop('근거 행')
+    out = {'장': tag, '장면': n, '갈래': g, '행': f'{lo}~{hi}', '기준': common + '\n\n' + own, '줄 수': len(rows), '목록': rows, '같은 대상·같은 항목': others}
     json.dump(out, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{tag} 장면 {n} ({lo}~{hi}) 갈래 {g}: 정리본 줄 {len(rows)} → {p}')
 
