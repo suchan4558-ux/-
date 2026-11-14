@@ -344,7 +344,7 @@ if lines is not None:
             if chk_row(w, new, fn):
                 if cells(new) == cells(orig[w]): bad.append(f'{w}: 고친 줄이 원래 줄과 같음(바뀐 칸 없음)')
                 chk_pyo(w, new, fn)
-                chk_facts_vs_row(w, p, new, fn, fids)
+                chk_facts_vs_row(w, p, new if spans(new) else orig[w], fn, fids)   # 이 장면 근거를 지운 고침은 사실을 원래 줄에 견줌
                 take(fids, new)
         if k == '남은 것':
             chk_crit(w, p.get('기준'))
