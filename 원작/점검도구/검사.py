@@ -440,6 +440,15 @@ if lines is not None:
         if left: bad.append(f'갈래 {g_}: 안 찍은 쪽이 있음 {left}')
         if e.get('기준 지문') != ksig: bad.append(f'갈래 {g_}: 찍은 뒤 기준 파일이 바뀜(다시 찍어야 함)')
         if sorted(e.get('줄', [])) != mine: bad.append(f'갈래 {g_}: 찍은 줄 목록이 지금의 줄 목록과 다름(다시 찍어야 함)')
+    # 남는 사실을 처리하기 직전에 기준 전체를 폈는지(모든 쪽, 갈래의 줄을 다 찍은 뒤)
+    e = shown_.get('기준')
+    if not e: bad.append('기준 전체: 뽑기.py "기준"으로 찍은 기록이 없음')
+    else:
+        left = [k for k in range(1, e.get('쪽 수', 0) + 1) if k not in e.get('띄운 쪽', [])]
+        if left: bad.append(f'기준 전체: 안 찍은 쪽이 있음 {left}')
+        if e.get('기준 지문') != ksig: bad.append('기준 전체: 찍은 뒤 기준 파일이 바뀜(다시 찍어야 함)')
+        late = [g_ for g_ in shown_ if g_ != '기준' and shown_[g_].get('때', 0) > e.get('때', 0)]
+        if late: bad.append(f'기준 전체: 갈래 {", ".join(late)}의 줄을 그 뒤에 찍음(줄 판정을 다 마친 뒤 기준 전체를 다시 찍어야 함)')
 stage = '사실 뽑기' if lines is None else '전체'
 if bad:
     print(f'{tag} 장면 {n} ({stage}): 걸림 {len(bad)}'); print('\n'.join(bad)); sys.exit(1)
