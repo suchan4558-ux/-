@@ -266,6 +266,7 @@ if lines is not None:
         elif nm: src_ok(where, '숫자 까닭', p.get('숫자 까닭'), row)
         t = QUOTED.sub(' ', c[3]); names = []   # 이름은 내용 칸만 봄(시점 칸의 "아스타테 직전" 같은 말은 시점 꼴)
         for s in STD:
+            if len(s) < 2: continue   # 한 글자 이름(예: 찬)은 낱말 속 글자와 가릴 수 없어 내용 칸에서 찾지 않음
             if re.search(r'(?<![가-힣])' + re.escape(s), t):
                 names.append(s); t = t.replace(s, ' ')
         def found(s):
