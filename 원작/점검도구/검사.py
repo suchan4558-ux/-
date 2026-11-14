@@ -173,7 +173,8 @@ for p in res.get('단락', []):
     for std, forms in FORMS.items():
         toks = {t for form in forms for t in re.split(r'[\s·.]+', form) if len(t) >= 2}
         # 낱말 하나로 찾는 것은 그 낱말이 이 이름에만 있을 때만(여러 이름에 든 낱말은 전체 표기로만 찾음)
-        hit = any((len(norm(form)) >= 3 and norm(form) in pn) or (len(norm(form)) == 2 and re.search(r'(?<![가-힣])' + re.escape(form), ps)) for form in forms)   # 두 글자 표기는 띄어쓰기를 살린 글에서 낱말 첫머리로만 찾음(예: '이 작전'을 '이작'으로 보지 않음) or (std in PERSON and any(len(t) >= 3 and t in ps and TOKOWN.get(t) == 1 for t in toks))
+        # 두 글자 표기는 띄어쓰기를 살린 글에서 낱말 첫머리로만 찾음(예: '이 작전'을 '이작'으로 보지 않음)
+        hit = any((len(norm(form)) >= 3 and norm(form) in pn) or (len(norm(form)) == 2 and re.search(r'(?<![가-힣])' + re.escape(form), ps)) for form in forms) or (std in PERSON and any(len(t) >= 3 and t in ps and TOKOWN.get(t) == 1 for t in toks))
         if hit and not (any(norm(form) in ftxt for form in forms) or any(t in ftxt for t in toks)): mnm.append(std)
     if mnm:
         v = p.get('뺀 이름') or ''
