@@ -442,7 +442,7 @@ mods 폴더:
 | noise_vs_player | 1 | 16 |
 | noise_vs_player_mid | 1 | 16 (팀의 2·3번째 픽) |
 | ban_noise | 4 | AI끼리 밴 무작위 |
-| draft_log | false | `draft-log.txt` 기록 |
+| draft_log | true | `draft-log.txt` 기록. 점수가 정한 대로 나오는지 확인하는 데 씀 |
 | debug_overlay | false | 드래프트 화면 디버그 패널 |
 | debug_over_panel | true | 디버그 패널 위치 |
 | debug_x | 20 | 디버그 패널 위치 |
